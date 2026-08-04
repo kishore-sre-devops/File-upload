@@ -114,6 +114,22 @@ def get_hardware_specs():
 
     return specs
 
+def get_prometheus_assets():
+    assets_map = {}
+    try:
+        r = requests.get(f"{PROM}/api/v1/targets", timeout=10)
+        if r.status_code == 200:
+            targets = r.json().get("data", {}).get("activeTargets", [])
+            for t in targets:
+                labels = t.get("labels", {})
+                inst = labels.get("instance", "").split(":")[0]
+                asset = labels.get("asset") or labels.get("Asset")
+                if inst and asset:
+                    assets_map[inst] = asset
+    except Exception:
+        pass
+    return assets_map
+
 def fmt_gb(v):
     if not v or v <= 0:
         return "N/A"
@@ -126,7 +142,7 @@ def extract_field(text, field_name):
     m = re.search(rf'{field_name}[:=]\s*([A-Za-z0-9\-_&\.]+)', text or "", re.IGNORECASE)
     return m.group(1).strip() if m else ""
 
-def generate_report_for_quarter(q, hw_specs):
+def generate_report_for_quarter(q, hw_specs, prom_assets):
     name = q["name"]
     start_dt = q["start"]
     end_dt = q["end"]
@@ -181,7 +197,7 @@ def generate_report_for_quarter(q, hw_specs):
                 job = extract_field(full_text, "job") or "alertmanager"
                 group = extract_field(full_text, "group") or "N/A"
                 vital = extract_field(full_text, "company") or "SMC"
-                asset = extract_field(full_text, "asset") or a.get("asset", "") or "CA"
+                asset = extract_field(full_text, "asset") or a.get("asset") or a.get("Asset") or prom_assets.get(inst, "")
 
                 logged_dates.add(ts.strftime("%Y-%m-%d"))
 
@@ -221,7 +237,7 @@ def generate_report_for_quarter(q, hw_specs):
             records.append({
                 "ts": ts,
                 "alert": template[0],
-                "asset": "CA",
+                "asset": prom_assets.get(inst, ""),
                 "instance": inst,
                 "job": template[1],
                 "group": template[2],
@@ -307,7 +323,7 @@ def generate_report_for_quarter(q, hw_specs):
             row = [
                 ts.strftime("%d:%B:%Y %H:%M:%S"),
                 f"{sev} - {vital_type}" if vital_type else alert,
-                r.get("asset", "CA"),
+                r.get("asset", ""),
                 inst,
                 r["job"],
                 r["group"],
@@ -327,12 +343,13 @@ def generate_report_for_quarter(q, hw_specs):
     print(f"✅ Successfully created {name} report with {len(records)} rows at {output_file} & synced to {upload_file}")
 
 def main():
-    print("Fetching Prometheus hardware specs...")
+    print("Fetching Prometheus hardware specs & assets...")
     hw_specs = get_hardware_specs()
-    print(f"Cached specs for {len(hw_specs)} instances.")
+    prom_assets = get_prometheus_assets()
+    print(f"Cached specs for {len(hw_specs)} instances and assets for {len(prom_assets)} instances.")
 
     for q in QUARTERS:
-        generate_report_for_quarter(q, hw_specs)
+        generate_report_for_quarter(q, hw_specs, prom_assets)
 
 if __name__ == "__main__":
     main()

@@ -88,6 +88,25 @@ def get_prometheus_hardware_specs():
 
     return specs
 
+def get_prometheus_assets():
+    assets_map = {}
+    try:
+        res = query_prometheus('up{asset!=""}')
+        for r in res:
+            inst = r.get("metric", {}).get("instance", "").split(":")[0]
+            asset = r.get("metric", {}).get("asset")
+            if inst and asset:
+                assets_map[inst] = asset
+        res = query_prometheus('up{Asset!=""}')
+        for r in res:
+            inst = r.get("metric", {}).get("instance", "").split(":")[0]
+            asset = r.get("metric", {}).get("Asset")
+            if inst and asset:
+                assets_map[inst] = asset
+    except Exception:
+        pass
+    return assets_map
+
 def format_bytes(bytes_val):
     """Converts bytes into human-readable string (GB or TB)."""
     if not bytes_val or bytes_val <= 0:
@@ -197,7 +216,7 @@ def parse_log_entry(raw_entry, target_date_str):
 
     volume = extract_volume_from_text(summary, description)
     free_val, used_val = extract_free_used_from_text(summary, description)
-    asset = entry.get("asset") or extract_field_from_text(description, "asset") or extract_field_from_text(summary, "asset") or "CA"
+    asset = entry.get("asset") or entry.get("Asset") or extract_field_from_text(description, "asset") or extract_field_from_text(summary, "asset") or prom_assets.get(instance, "")
 
     return {
         "date": record_date,
@@ -264,8 +283,10 @@ def main():
     print(f"=== Generating Audit Report for Date: {args.date} ===")
 
     # 1. Gather hardware specs from Prometheus
-    print("Fetching Prometheus hardware metrics...")
+    print("Fetching Prometheus hardware specs & assets...")
     hw_specs = get_prometheus_hardware_specs()
+    global prom_assets
+    prom_assets = get_prometheus_assets()
     print(f"Cached hardware specs for {len(hw_specs)} instances.")
 
     # 2. Fetch alert logs from Loki
@@ -370,7 +391,7 @@ def main():
             row = [
                 rec["date"],
                 rec["alertname"],
-                rec.get("asset", "CA"),
+                rec.get("asset", ""),
                 rec["instance"],
                 rec["job"],
                 rec["group"],

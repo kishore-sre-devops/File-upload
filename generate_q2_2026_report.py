@@ -73,6 +73,22 @@ def get_hardware_specs():
 
     return specs
 
+def get_prometheus_assets():
+    assets_map = {}
+    try:
+        r = requests.get(f"{PROM}/api/v1/targets", timeout=10)
+        if r.status_code == 200:
+            targets = r.json().get("data", {}).get("activeTargets", [])
+            for t in targets:
+                labels = t.get("labels", {})
+                inst = labels.get("instance", "").split(":")[0]
+                asset = labels.get("asset") or labels.get("Asset")
+                if inst and asset:
+                    assets_map[inst] = asset
+    except Exception:
+        pass
+    return assets_map
+
 def fmt_gb(v):
     if not v or v <= 0:
         return "N/A"
@@ -86,8 +102,9 @@ def extract_field(text, field_name):
     return m.group(1).strip() if m else ""
 
 def main():
-    print("1. Fetching Prometheus hardware specs...")
+    print("Fetching Prometheus hardware specs & assets...")
     hw_specs = get_hardware_specs()
+    prom_assets = get_prometheus_assets()
     print(f"   Cached specs for {len(hw_specs)} instances.")
 
     records = []
@@ -135,7 +152,7 @@ def main():
                 job = extract_field(full_text, "job") or "alertmanager"
                 group = extract_field(full_text, "group") or "N/A"
                 vital = extract_field(full_text, "company") or "SMC"
-                asset = extract_field(full_text, "asset") or a.get("asset", "") or "CA"
+                asset = extract_field(full_text, "asset") or a.get("asset") or a.get("Asset") or prom_assets.get(inst, "")
 
                 logged_dates.add(ts.strftime("%Y-%m-%d"))
 
@@ -177,7 +194,7 @@ def main():
             records.append({
                 "ts": ts,
                 "alert": template[0],
-                "asset": "CA",
+                "asset": prom_assets.get(inst, ""),
                 "instance": inst,
                 "job": template[1],
                 "group": template[2],
@@ -269,7 +286,7 @@ def main():
             row = [
                 ts.strftime("%d:%B:%Y %H:%M:%S"),
                 f"{sev} - {vital_type}" if vital_type else alert,
-                r.get("asset", "CA"),
+                r.get("asset", ""),
                 inst,
                 r["job"],
                 r["group"],

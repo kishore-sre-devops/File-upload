@@ -71,6 +71,22 @@ def get_hardware_specs():
 
     return specs
 
+def get_prometheus_assets():
+    assets_map = {}
+    try:
+        r = requests.get(f"{PROM}/api/v1/targets", timeout=10)
+        if r.status_code == 200:
+            targets = r.json().get("data", {}).get("activeTargets", [])
+            for t in targets:
+                labels = t.get("labels", {})
+                inst = labels.get("instance", "").split(":")[0]
+                asset = labels.get("asset") or labels.get("Asset")
+                if inst and asset:
+                    assets_map[inst] = asset
+    except Exception:
+        pass
+    return assets_map
+
 def fmt_gb(v):
     if not v or v <= 0:
         return "N/A"
@@ -123,8 +139,9 @@ def collect_daily_alerts(target_date=None):
 
     print(f"Target Quarter File: {filename}")
 
-    # Fetch hardware specs
+    # Fetch hardware specs and Prometheus assets
     hw_specs = get_hardware_specs()
+    prom_assets = get_prometheus_assets()
 
     start_dt = datetime(target_date.year, target_date.month, target_date.day, 0, 0, 0, tzinfo=timezone.utc)
     end_dt   = datetime(target_date.year, target_date.month, target_date.day, 23, 59, 59, tzinfo=timezone.utc)
@@ -171,7 +188,7 @@ def collect_daily_alerts(target_date=None):
                 job = extract_field(full_text, "job") or "alertmanager"
                 group = extract_field(full_text, "group") or "N/A"
                 vital = extract_field(full_text, "company") or "SMC"
-                asset = extract_field(full_text, "asset") or a.get("asset", "") or "CA"
+                asset = extract_field(full_text, "asset") or a.get("asset") or a.get("Asset") or prom_assets.get(inst, "")
 
                 records.append({
                     "ts": ts,
@@ -263,7 +280,7 @@ def collect_daily_alerts(target_date=None):
             row = [
                 ts.strftime("%d:%B:%Y %H:%M:%S"),
                 f"{sev} - {vital_type}" if vital_type else alert,
-                r.get("asset", "CA"),
+                r.get("asset", ""),
                 inst,
                 r["job"],
                 r["group"],
