@@ -285,12 +285,12 @@ def main():
 
             row = [
                 ts.strftime("%d:%B:%Y %H:%M:%S"),
-                f"{sev} - {vital_type}" if vital_type else alert,
+                alert,
                 r.get("asset", ""),
                 inst,
                 r["job"],
                 r["group"],
-                sev.split()[0],
+                sev,
                 vital_type,
                 cpu_str,
                 mem_total_str if vital_type == "Memory" else "",

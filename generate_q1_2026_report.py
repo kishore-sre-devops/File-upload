@@ -16,7 +16,7 @@ from datetime import datetime, timezone, timedelta
 
 PROM = "http://localhost:9090"
 LOG_FILE = "/var/log/prometheus/alertmanager_events.log"
-OUTPUT = "/opt/audit_report/Alert_Report_2026_01_01_to_2026_03_31.csv"
+OUTPUT = "/opt/audit_report/SMC_Alert_Report_2026_01_01_to_2026_03_31.csv"
 
 START = datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 END   = datetime(2026, 3, 31, 23, 59, 59, tzinfo=timezone.utc)
@@ -281,12 +281,12 @@ with open(OUTPUT, "w", newline="", encoding="utf-8") as out:
 
         row = [
             ts.strftime("%d:%B:%Y %H:%M:%S"),
-            f"{sev} - {vital_type}" if vital_type else alert,
+            alert,
             r.get("asset", ""),
             inst,
             r["job"],
             r["group"],
-            sev.split()[0],
+            sev,
             vital_type,
             cpu_str,
             mem_total_str if vital_type == "Memory" else "",
