@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
 """
-test.py
+generate_q3_2026_report.py
 
-Generates quarterly CSV audit reports for:
-- 2025 Q2 (2025-04-01 to 2025-06-30)
-- 2025 Q3 (2025-07-01 to 2025-09-30)
-- 2025 Q4 (2025-10-01 to 2025-12-31)
-- 2026 Q1 (2026-01-01 to 2026-03-31)
-
-Only includes firing alerts where Severity starts with 'Critical'.
-Reads Alertmanager JSON log from /var/log/prometheus/alertmanager_events.log
-and queries Prometheus for hardware specs.
+Generates the audit report for 1st July 2026 to 30th September 2026 (Q3 2026).
+Reads /var/log/prometheus/alertmanager_events.log, queries Prometheus for
+hardware specifications & assets, and outputs SMC_Alert_Report_2026_07_01_to_2026_09_30.csv.
 """
 
 import csv
@@ -18,58 +12,16 @@ import json
 import os
 import re
 import shutil
-import sys
 import requests
 from datetime import datetime, timezone, timedelta
 
 PROM = "http://localhost:9090"
 LOG_FILE = "/var/log/prometheus/alertmanager_events.log"
-BASE_DIR = "/opt/audit_report"
+OUTPUT = "/opt/audit_report/SMC_Alert_Report_2026_07_01_to_2026_09_30.csv"
+OUTPUT_FU = "/opt/audit_report/File-upload/SMC_Alert_Report_2026_07_01_to_2026_09_30.csv"
 
-QUARTERS = [
-    {
-        "name": "2025 Q2",
-        "output": os.path.join(BASE_DIR, "SMC_Alert_Report_2025_04_01_to_2025_06_30.csv"),
-        "start": datetime(2025, 4, 1, 0, 0, 0, tzinfo=timezone.utc),
-        "end": datetime(2025, 6, 30, 23, 59, 59, tzinfo=timezone.utc),
-        "months": ["2025-04-", "2025-05-", "2025-06-"]
-    },
-    {
-        "name": "2025 Q3",
-        "output": os.path.join(BASE_DIR, "SMC_Alert_Report_2025_07_01_to_2025_09_30.csv"),
-        "start": datetime(2025, 7, 1, 0, 0, 0, tzinfo=timezone.utc),
-        "end": datetime(2025, 9, 30, 23, 59, 59, tzinfo=timezone.utc),
-        "months": ["2025-07-", "2025-08-", "2025-09-"]
-    },
-    {
-        "name": "2025 Q4",
-        "output": os.path.join(BASE_DIR, "SMC_Alert_Report_2025_10_01_to_2025_12_31.csv"),
-        "start": datetime(2025, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
-        "end": datetime(2025, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
-        "months": ["2025-10-", "2025-11-", "2025-12-"]
-    },
-    {
-        "name": "2026 Q1",
-        "output": os.path.join(BASE_DIR, "SMC_Alert_Report_2026_01_01_to_2026_03_31.csv"),
-        "start": datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
-        "end": datetime(2026, 3, 31, 23, 59, 59, tzinfo=timezone.utc),
-        "months": ["2026-01-", "2026-02-", "2026-03-"]
-    },
-    {
-        "name": "2026 Q2",
-        "output": os.path.join(BASE_DIR, "SMC_Alert_Report_2026_04_01_to_2026_06_30.csv"),
-        "start": datetime(2026, 4, 1, 0, 0, 0, tzinfo=timezone.utc),
-        "end": datetime(2026, 6, 30, 23, 59, 59, tzinfo=timezone.utc),
-        "months": ["2026-04-", "2026-05-", "2026-06-"]
-    },
-    {
-        "name": "2026 Q3",
-        "output": os.path.join(BASE_DIR, "SMC_Alert_Report_2026_07_01_to_2026_09_30.csv"),
-        "start": datetime(2026, 7, 1, 0, 0, 0, tzinfo=timezone.utc),
-        "end": datetime(2026, 9, 30, 23, 59, 59, tzinfo=timezone.utc),
-        "months": ["2026-07-", "2026-08-", "2026-09-"]
-    }
-]
+START = datetime(2026, 7, 1, 0, 0, 0, tzinfo=timezone.utc)
+END   = datetime(2026, 9, 30, 23, 59, 59, tzinfo=timezone.utc)
 
 HEADERS = [
     "Date", "Alert Name", "Asset", "Instance", "Job", "Group", "Severity", "Vital",
@@ -149,22 +101,20 @@ def extract_field(text, field_name):
     m = re.search(rf'{field_name}[:=]\s*([A-Za-z0-9\-_&\.]+)', text or "", re.IGNORECASE)
     return m.group(1).strip() if m else ""
 
-def generate_report_for_quarter(q, hw_specs, prom_assets):
-    name = q["name"]
-    start_dt = q["start"]
-    end_dt = q["end"]
-    months_filter = q["months"]
-    output_file = q["output"]
+def main():
+    print("Fetching Prometheus hardware specs & assets...")
+    hw_specs = get_hardware_specs()
+    prom_assets = get_prometheus_assets()
+    print(f"   Cached specs for {len(hw_specs)} instances and assets for {len(prom_assets)} instances.")
 
-    print(f"\n--- Generating Report for {name} ({output_file}) ---")
     records = []
     logged_dates = set()
 
     if os.path.exists(LOG_FILE):
-        print(f"Parsing log file {LOG_FILE} for {name}...")
+        print(f"Parsing log file {LOG_FILE} for Q3 2026...")
         with open(LOG_FILE, encoding="utf-8", errors="ignore") as f:
             for line in f:
-                if not any(m in line for m in months_filter):
+                if not any(m in line for m in ["2026-07-", "2026-08-", "2026-09-"]):
                     continue
                 line = line.strip()
                 if not line:
@@ -183,7 +133,7 @@ def generate_report_for_quarter(q, hw_specs, prom_assets):
                 except Exception:
                     continue
 
-                if ts < start_dt or ts > end_dt:
+                if ts < START or ts > END:
                     continue
 
                 alert = a.get("alertname", "")
@@ -192,11 +142,8 @@ def generate_report_for_quarter(q, hw_specs, prom_assets):
 
                 inst = a.get("instance", "").split(":")[0]
                 sev = a.get("severity", "Critical")
-
-                # Filter: ONLY alerts where Severity starts with Critical
                 if not str(sev).strip().lower().startswith("critical"):
                     continue
-
                 desc = a.get("description", "")
                 summ = a.get("summary", "")
                 full_text = f"{summ}\n{desc}"
@@ -221,47 +168,14 @@ def generate_report_for_quarter(q, hw_specs, prom_assets):
                     "summary": summ
                 })
 
-    print(f"Extracted {len(records)} log events across {len(logged_dates)} unique dates.")
+    print(f"   Extracted {len(records)} events from log across {len(logged_dates)} unique dates.")
 
-    # Fill missing dates in the quarter
-    sample_instances = list(hw_specs.keys()) if hw_specs else ["172.16.0.186", "172.16.14.150", "172.16.0.50", "172.16.0.60"]
-    cur = start_dt
-    added_synth = 0
-    synth_templates = [
-        ("WindowsServerDiskSpaceUsage", "SMC-Focus", "BackOffice", "Critical 90%", "SMC", "Free Space = 15.20GB Used = 90%", "Drive: D:"),
-        ("LinuxServerRootDiskSpace", "Cizentrix FTP", "Infra-Team-Cezentrix", "Critical 95%", "SMC", "Available = 4.50GB Used = 95%", "Mountpoint: /"),
-        ("WindowsServerMemoryUsage", "DR-Trading-Systems", "HR", "Critical 95%", "SMC", "Used = 95.00%", "Memory usage is high"),
-        ("WindowsServerCpuUsage", "SMC-IOB-WindowsDB", "Product-team", "Critical 98%", "SMC", "Used = 98.00%", "CPU usage exceeds threshold"),
-    ]
-
-    idx = 0
-    while cur <= end_dt:
-        dt_key = cur.strftime("%Y-%m-%d")
-        if dt_key not in logged_dates:
-            template = synth_templates[idx % len(synth_templates)]
-            inst = sample_instances[idx % len(sample_instances)]
-            ts = cur.replace(hour=10, minute=0, second=0)
-            records.append({
-                "ts": ts,
-                "alert": template[0],
-                "asset": prom_assets.get(inst, ""),
-                "instance": inst,
-                "job": template[1],
-                "group": template[2],
-                "severity": template[3],
-                "vital": template[4],
-                "desc": template[5],
-                "summary": template[6]
-            })
-            added_synth += 1
-            idx += 1
-        cur += timedelta(days=1)
-
-    print(f"Added {added_synth} synthetic entries for missing dates.")
     records.sort(key=lambda x: x["ts"])
 
-    os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    with open(output_file, "w", newline="", encoding="utf-8") as out:
+    os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
+    os.makedirs(os.path.dirname(OUTPUT_FU), exist_ok=True)
+
+    with open(OUTPUT, "w", newline="", encoding="utf-8") as out:
         writer = csv.writer(out)
         writer.writerow(HEADERS)
 
@@ -279,12 +193,10 @@ def generate_report_for_quarter(q, hw_specs, prom_assets):
             mem_total_bytes = spec.get("mem_total_bytes")
             disks = spec.get("disks", {})
 
-            # Extract volume
             m_vol = re.search(r'(?:Drive|volume)[:=]?\s*([A-Z]:)', full_text, re.IGNORECASE) or \
                     re.search(r'(?:Mountpoint|mountpoint)[:=]?\s*([/\w\-_]+)', full_text, re.IGNORECASE)
             volume = m_vol.group(1).upper() if m_vol and ":" in m_vol.group(1) else (m_vol.group(1) if m_vol else "N/A")
 
-            # Disk total
             total_disk_bytes = disks.get(volume)
             if not total_disk_bytes and volume != "N/A":
                 for d_k, d_v in disks.items():
@@ -294,7 +206,6 @@ def generate_report_for_quarter(q, hw_specs, prom_assets):
             if not total_disk_bytes and disks:
                 total_disk_bytes = list(disks.values())[0]
 
-            # Percent & values
             m_used = re.search(r'Used\s*=\s*([\d.]+)%', desc) or re.search(r'(\d+)%', sev)
             used_pct = float(m_used.group(1)) if m_used else None
 
@@ -345,18 +256,8 @@ def generate_report_for_quarter(q, hw_specs, prom_assets):
             ]
             writer.writerow(row)
 
-    upload_file = os.path.join(BASE_DIR, "File-upload", os.path.basename(output_file))
-    shutil.copyfile(output_file, upload_file)
-    print(f"✅ Successfully created {name} report with {len(records)} rows at {output_file} & synced to {upload_file}")
-
-def main():
-    print("Fetching Prometheus hardware specs & assets...")
-    hw_specs = get_hardware_specs()
-    prom_assets = get_prometheus_assets()
-    print(f"Cached specs for {len(hw_specs)} instances and assets for {len(prom_assets)} instances.")
-
-    for q in QUARTERS:
-        generate_report_for_quarter(q, hw_specs, prom_assets)
+    shutil.copyfile(OUTPUT, OUTPUT_FU)
+    print(f"✅ Successfully wrote report with {len(records)} rows to {OUTPUT} and {OUTPUT_FU}")
 
 if __name__ == "__main__":
     main()
