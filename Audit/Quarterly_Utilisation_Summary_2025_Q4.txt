@@ -1,0 +1,115 @@
+========================================================================================================================
+QUARTERLY UTILISATION & CAPACITY REPORT: 2025 Q4 (Oct 2025 - Dec 2025)
+========================================================================================================================
+S.No.  Particulars      Installed Capacity  Utilised capacity  Highest Peak load observed during the quarter  No. of instances and dates when utilisation has gone beyond 70% of installed capacity
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1      10.0.60.3        31.88 GB            31.45 GB           90%(Memory)                                    162- Instances in Oct 2025                                                           
+2      10.0.60.3        195.22 GB           175.70 GB          90%(Disk)                                      22- Instances in Oct 2025                                                            
+3      10.0.60.4        31.83 GB            31.74 GB           90%(Memory)                                    27- Instances in Oct 2025                                                            
+4      10.0.60.4        238.19 GB           214.37 GB          90%(Disk)                                      28- Instances in Oct 2025                                                            
+5      10.0.60.5        569.12 GB           512.21 GB          90%(Disk)                                      96- Instances in Oct 2025                                                            
+6      10.0.60.7        283.92 GB           255.53 GB          90%(Disk)                                      09- Instances in Oct 2025                                                            
+7      10.0.60.8        232.04 GB           208.84 GB          90%(Disk)                                      03- Instances in Oct 2025                                                            
+8      10.0.60.8        8 Core              N/A                70%(CPU)                                       02- Instances in Oct 2025                                                            
+9      10.0.60.12       N/A                 97.80%             90%(Memory)                                    26- Instances in Oct 2025                                                            
+10     10.0.60.179      309.09 GB           278.19 GB          90%(Disk)                                      23- Instances in Oct 2025                                                            
+11     172.16.0.59      N/A                 90.35%             90%(Memory)                                    02- Instances in Oct 2025                                                            
+12     172.16.0.94      5.82 TB             5.24 TB            90%(Disk)                                      741- Instances in Oct 2025                                                           
+13     172.16.0.95      2.91 TB, 5.82 TB    5.24 TB            90%(Disk)                                      799- Instances in Oct 2025                                                           
+14     172.16.0.166     16 Core             N/A                70%(CPU)                                       04- Instances in Oct 2025                                                            
+15     172.16.0.166     5.50 TB             4.95 TB            90%(Disk)                                      08- Instances in Oct 2025                                                            
+16     172.16.0.182     1.75 TB             1.57 TB            90%(Disk)                                      248- Instances in Oct 2025                                                           
+17     172.16.0.251     N/A                 90.00%             90%(Disk)                                      309- Instances in Oct 2025                                                           
+18     172.16.0.251     N/A                 90.46%             90%(Memory)                                    11- Instances in Oct 2025                                                            
+19     172.16.1.6       1.75 TB             1.57 TB            90%(Disk)                                      03- Instances in Oct 2025                                                            
+20     172.16.1.104     224.30 GB           201.87 GB          90%(Disk)                                      38- Instances in Oct 2025                                                            
+21     172.16.1.139     23.61 GB            21.25 GB           90%(Memory)                                    280- Instances in Oct 2025                                                           
+22     172.16.1.139     4 Core              93.22%             90%(CPU)                                       16- Instances in Oct 2025                                                            
+23     172.16.1.144     80.15 GB            72.14 GB           90%(Disk)                                      56- Instances in Oct 2025                                                            
+24     172.16.2.98      32.00 GB            31.89 GB           90%(Memory)                                    07- Instances in Oct 2025                                                            
+25     172.16.2.170     1.07 TB             990.00 GB          90%(Disk)                                      68- Instances in Oct 2025                                                            
+26     172.16.2.192     64.00 GB            61.89 GB           95%(Memory)                                    02- Instances in Oct 2025                                                            
+27     172.16.14.231    32.00 GB            31.87 GB           90%(Memory)                                    139- Instances in Oct 2025                                                           
+28     192.168.1.24     N/A                 N/A                70%(CPU)                                       02- Instances in Oct 2025                                                            
+29     192.168.1.36     292.97 GB           234.37 GB          80%(Disk)                                      12- Instances in Oct 2025                                                            
+30     192.168.1.54     N/A                 87.75%             80%(CPU)                                       02- Instances in Oct 2025                                                            
+31     192.168.1.69     N/A                 88.85%             80%(CPU)                                       02- Instances in Oct 2025                                                            
+32     192.168.1.85     8 Core              87.40%             80%(CPU)                                       02- Instances in Oct 2025                                                            
+33     192.168.1.96     N/A                 80.35%             80%(CPU)                                       02- Instances in Oct 2025                                                            
+34     192.168.1.158    N/A                 80.76%             80%(Memory)                                    06- Instances in Oct 2025                                                            
+35     192.168.15.54    15.62 GB            14.06 GB           90%(Memory)                                    34- Instances in Oct 2025                                                            
+36     192.168.15.112   178.58 GB           160.72 GB          90%(Disk)                                      417- Instances in Oct 2025                                                           
+37     192.168.15.128   32 Core             N/A                70%(CPU)                                       12- Instances in Oct 2025                                                            
+38     10.0.60.4        31.83 GB            31.57 GB           90%(Memory)                                    10- Instances in Nov 2025                                                            
+39     10.0.60.5        8 Core              N/A                70%(CPU)                                       02- Instances in Nov 2025                                                            
+40     10.0.60.12       N/A                 94.59%             90%(Memory)                                    48- Instances in Nov 2025                                                            
+41     172.16.0.94      5.82 TB             5.24 TB            90%(Disk)                                      708- Instances in Nov 2025                                                           
+42     172.16.0.95      2.91 TB, 5.82 TB    5.24 TB            90%(Disk)                                      787- Instances in Nov 2025                                                           
+43     172.16.0.116     1.75 TB             1.57 TB            90%(Disk)                                      17- Instances in Nov 2025                                                            
+44     172.16.0.166     5.50 TB             4.95 TB            90%(Disk)                                      06- Instances in Nov 2025                                                            
+45     172.16.0.170     112.37 GB           101.13 GB          90%(Disk)                                      04- Instances in Nov 2025                                                            
+46     172.16.0.182     1.75 TB, 244.14 GB  1.57 TB            90%(Disk)                                      165- Instances in Nov 2025                                                           
+47     172.16.0.251     N/A                 90.00%             90%(Disk)                                      691- Instances in Nov 2025                                                           
+48     172.16.1.6       1.75 TB             1.57 TB            90%(Disk)                                      273- Instances in Nov 2025                                                           
+49     172.16.1.69      8 Core              N/A                70%(CPU)                                       02- Instances in Nov 2025                                                            
+50     172.16.1.104     224.30 GB           201.87 GB          90%(Disk)                                      450- Instances in Nov 2025                                                           
+51     172.16.1.139     23.61 GB            21.25 GB           90%(Memory)                                    266- Instances in Nov 2025                                                           
+52     172.16.1.139     4 Core              96.02%             90%(CPU)                                       46- Instances in Nov 2025                                                            
+53     172.16.1.144     80.15 GB            72.14 GB           90%(Disk)                                      734- Instances in Nov 2025                                                           
+54     172.16.2.98      12 Core             N/A                70%(CPU)                                       02- Instances in Nov 2025                                                            
+55     172.16.2.98      32.00 GB            31.52 GB           90%(Memory)                                    07- Instances in Nov 2025                                                            
+56     172.16.2.98      292.97 GB           263.67 GB          90%(Disk)                                      63- Instances in Nov 2025                                                            
+57     172.16.2.171     32.00 GB            31.89 GB           95%(Memory)                                    14- Instances in Nov 2025                                                            
+58     172.16.14.231    32.00 GB            31.87 GB           90%(Memory)                                    51- Instances in Nov 2025                                                            
+59     192.168.1.36     292.97 GB           234.37 GB          80%(Disk)                                      12- Instances in Nov 2025                                                            
+60     192.168.1.42     N/A                 90.85%             80%(CPU)                                       02- Instances in Nov 2025                                                            
+61     192.168.1.54     N/A                 81.22%             80%(CPU)                                       02- Instances in Nov 2025                                                            
+62     192.168.1.69     N/A                 N/A                70%(CPU)                                       02- Instances in Nov 2025                                                            
+63     192.168.1.85     8 Core              90.23%             80%(CPU)                                       02- Instances in Nov 2025                                                            
+64     192.168.15.51    24 Core             91.52%             90%(CPU)                                       02- Instances in Nov 2025                                                            
+65     192.168.15.112   178.58 GB           160.72 GB          90%(Disk)                                      305- Instances in Nov 2025                                                           
+66     192.168.15.128   32 Core             N/A                70%(CPU)                                       06- Instances in Nov 2025                                                            
+67     192.168.176.105  N/A                 71.27%             70%(CPU)                                       02- Instances in Nov 2025                                                            
+68     192.168.176.107  N/A                 70.79%             70%(CPU)                                       02- Instances in Nov 2025                                                            
+69     192.168.176.109  N/A                 71.03%             70%(CPU)                                       04- Instances in Nov 2025                                                            
+70     192.168.176.110  N/A                 71.90%             70%(CPU)                                       02- Instances in Nov 2025                                                            
+71     192.168.176.232  N/A                 N/A                70%(CPU)                                       02- Instances in Nov 2025                                                            
+72     10.0.60.3        31.88 GB            30.91 GB           90%(Memory)                                    02- Instances in Dec 2025                                                            
+73     10.0.60.4        31.83 GB            31.43 GB           90%(Memory)                                    12- Instances in Dec 2025                                                            
+74     10.0.60.5        31.66 GB            31.12 GB           90%(Memory)                                    02- Instances in Dec 2025                                                            
+75     10.0.60.9        4 Core              96.25%             90%(CPU)                                       02- Instances in Dec 2025                                                            
+76     10.0.60.12       N/A                 97.62%             90%(Memory)                                    12- Instances in Dec 2025                                                            
+77     10.0.60.48       31.79 GB            30.97 GB           90%(Memory)                                    02- Instances in Dec 2025                                                            
+78     10.0.60.179      31.66 GB            31.16 GB           90%(Memory)                                    02- Instances in Dec 2025                                                            
+79     172.16.0.79      40 Core             99.37%             90%(CPU)                                       16- Instances in Dec 2025                                                            
+                                                               95%(CPU)                                       11- Instances in Dec 2025                                                            
+80     172.16.0.95      2.91 TB             2.62 TB            90%(Disk)                                      48- Instances in Dec 2025                                                            
+81     172.16.0.118     16 Core             N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+82     172.16.0.166     5.50 TB             4.95 TB            90%(Disk)                                      08- Instances in Dec 2025                                                            
+83     172.16.0.166     16 Core             N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+84     172.16.0.172     199.40 GB           179.46 GB          90%(Disk)                                      70- Instances in Dec 2025                                                            
+85     172.16.0.181     40 Core             N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+86     172.16.0.182     1.75 TB             1.57 TB            90%(Disk)                                      102- Instances in Dec 2025                                                           
+87     172.16.0.204     292.97 GB           263.67 GB          90%(Disk)                                      44- Instances in Dec 2025                                                            
+88     172.16.0.204     24 Core             N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+89     172.16.0.209     8.00 GB             7.80 GB            90%(Memory)                                    08- Instances in Dec 2025                                                            
+90     172.16.0.251     N/A                 90.00%             90%(Disk)                                      602- Instances in Dec 2025                                                           
+91     172.16.1.6       1.75 TB             1.57 TB            90%(Disk)                                      43- Instances in Dec 2025                                                            
+92     172.16.1.24      16 Core             99.90%             90%(CPU)                                       06- Instances in Dec 2025                                                            
+93     172.16.1.69      8 Core              N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+94     172.16.1.139     23.61 GB            21.25 GB           90%(Memory)                                    248- Instances in Dec 2025                                                           
+95     172.16.1.139     4 Core              96.78%             90%(CPU)                                       40- Instances in Dec 2025                                                            
+96     172.16.1.144     80.15 GB            72.14 GB           90%(Disk)                                      236- Instances in Dec 2025                                                           
+97     172.16.2.98      32.00 GB            31.79 GB           90%(Memory)                                    04- Instances in Dec 2025                                                            
+98     172.16.2.192     64.00 GB            63.76 GB           95%(Memory)                                    12- Instances in Dec 2025                                                            
+99     172.16.14.189    8 Core              N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+100    172.16.14.231    32.00 GB            32.00 GB           90%(Memory)                                    47- Instances in Dec 2025                                                            
+101    192.168.1.36     292.97 GB           234.37 GB          80%(Disk)                                      11- Instances in Dec 2025                                                            
+102    192.168.15.128   32 Core             N/A                70%(CPU)                                       04- Instances in Dec 2025                                                            
+103    192.168.176.126  N/A                 N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+104    192.168.176.140  N/A                 96.19%             70%(CPU)                                       02- Instances in Dec 2025                                                            
+105    192.168.176.238  N/A                 N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+106    192.168.176.239  N/A                 N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+107    192.168.176.240  N/A                 N/A                70%(CPU)                                       02- Instances in Dec 2025                                                            
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+

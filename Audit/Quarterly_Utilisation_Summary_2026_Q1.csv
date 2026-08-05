@@ -1,0 +1,112 @@
+S.No.,Particulars,Installed Capacity,Utilised capacity,Highest Peak load observed during the quarter,No. of instances and dates when utilisation has gone beyond 70% of installed capacity
+1,10.0.60.3,31.88 GB,31.03 GB,90%(Memory),02- Instances in Jan 2026
+2,10.0.60.4,31.83 GB,31.39 GB,90%(Memory),12- Instances in Jan 2026
+3,10.0.60.12,N/A,96.06%,90%(Memory),44- Instances in Jan 2026
+4,10.0.60.48,31.79 GB,31.29 GB,90%(Memory),02- Instances in Jan 2026
+5,172.16.0.94,2.91 TB,2.62 TB,90%(Disk),31- Instances in Jan 2026
+6,172.16.0.94,64 Core,99.96%,95%(CPU),02- Instances in Jan 2026
+7,172.16.0.95,"2.91 TB, 5.82 TB",5.24 TB,90%(Disk),51- Instances in Jan 2026
+8,172.16.0.105,"1.45 TB, 1.75 TB",1.57 TB,90%(Disk),33- Instances in Jan 2026
+9,172.16.0.116,1.75 TB,1.57 TB,90%(Disk),16- Instances in Jan 2026
+10,172.16.0.118,24.00 GB,23.13 GB,90%(Memory),06- Instances in Jan 2026
+11,172.16.0.166,5.50 TB,4.95 TB,90%(Disk),06- Instances in Jan 2026
+12,172.16.0.177,"1.00 TB, 1.50 TB",1.35 TB,90%(Disk),07- Instances in Jan 2026
+13,172.16.0.182,95.91 GB,93.96 GB,95%(Memory),175- Instances in Jan 2026
+14,172.16.0.182,1.75 TB,1.57 TB,90%(Disk),46- Instances in Jan 2026
+15,172.16.0.251,N/A,90.00%,90%(Disk),486- Instances in Jan 2026
+16,172.16.0.251,N/A,90.95%,90%(Memory),32- Instances in Jan 2026
+17,172.16.1.6,63.94 GB,62.30 GB,90%(Memory),02- Instances in Jan 2026
+18,172.16.1.104,224.30 GB,201.87 GB,90%(Disk),131- Instances in Jan 2026
+19,172.16.1.135,11.68 GB,10.51 GB,90%(Memory),08- Instances in Jan 2026
+20,172.16.1.136,4 Core,94.76%,90%(CPU),05- Instances in Jan 2026
+21,172.16.1.136,11.68 GB,10.51 GB,90%(Memory),06- Instances in Jan 2026
+22,172.16.1.138,67.31 GB,60.58 GB,90%(Disk),02- Instances in Jan 2026
+23,172.16.1.139,23.61 GB,21.25 GB,90%(Memory),266- Instances in Jan 2026
+24,172.16.1.139,4 Core,91.11%,90%(CPU),42- Instances in Jan 2026
+25,172.16.2.98,32.00 GB,31.90 GB,90%(Memory),18- Instances in Jan 2026
+26,172.16.2.192,64.00 GB,63.87 GB,95%(Memory),103- Instances in Jan 2026
+27,172.16.2.192,149.40 GB,134.46 GB,90%(Disk),14- Instances in Jan 2026
+28,172.16.14.231,32.00 GB,31.89 GB,90%(Memory),58- Instances in Jan 2026
+29,192.168.1.36,292.97 GB,234.37 GB,80%(Disk),41- Instances in Jan 2026
+30,192.168.1.38,N/A,80.00%,80%(Disk),07- Instances in Jan 2026
+31,192.168.1.158,N/A,73.01%,80%(Memory),71- Instances in Jan 2026
+32,192.168.15.112,8 Core,91.98%,90%(CPU),08- Instances in Jan 2026
+33,192.168.15.128,32 Core,N/A,70%(CPU),18- Instances in Jan 2026
+34,10.0.60.3,31.88 GB,31.37 GB,90%(Memory),06- Instances in Feb 2026
+35,10.0.60.4,31.83 GB,31.40 GB,90%(Memory),14- Instances in Feb 2026
+36,10.0.60.5,31.66 GB,30.78 GB,90%(Memory),02- Instances in Feb 2026
+37,10.0.60.11,N/A,90.54%,90%(Memory),03- Instances in Feb 2026
+38,10.0.60.12,N/A,93.49%,90%(Memory),48- Instances in Feb 2026
+39,10.0.60.48,31.79 GB,30.93 GB,90%(Memory),02- Instances in Feb 2026
+40,172.16.0.94,"2.91 TB, 5.82 TB",5.24 TB,90%(Disk),357- Instances in Feb 2026
+41,172.16.0.95,"2.91 TB, 5.82 TB",5.24 TB,90%(Disk),175- Instances in Feb 2026
+42,172.16.0.105,1.45 TB,1.31 TB,90%(Disk),403- Instances in Feb 2026
+43,172.16.0.116,"1.75 TB, 208.43 GB, 893.75 GB",1.57 TB,90%(Disk),487- Instances in Feb 2026
+44,172.16.0.118,24.00 GB,23.97 GB,90%(Memory),13- Instances in Feb 2026
+45,172.16.0.166,"2.00 TB, 5.50 TB",4.95 TB,90%(Disk),08- Instances in Feb 2026
+46,172.16.0.181,63.96 GB,62.54 GB,95%(Memory),83- Instances in Feb 2026
+47,172.16.0.182,1.75 TB,1.57 TB,90%(Disk),32- Instances in Feb 2026
+48,172.16.0.204,292.97 GB,263.67 GB,90%(Disk),167- Instances in Feb 2026
+49,172.16.0.251,N/A,90.00%,90%(Disk),02- Instances in Feb 2026
+50,172.16.1.104,224.30 GB,201.87 GB,90%(Disk),59- Instances in Feb 2026
+51,172.16.1.139,23.61 GB,21.25 GB,90%(Memory),234- Instances in Feb 2026
+52,172.16.1.139,4 Core,96.04%,90%(CPU),34- Instances in Feb 2026
+53,172.16.1.144,80.15 GB,72.14 GB,90%(Disk),174- Instances in Feb 2026
+54,172.16.2.170,199.40 GB,179.46 GB,90%(Disk),64- Instances in Feb 2026
+55,172.16.2.191,32.00 GB,31.12 GB,90%(Memory),02- Instances in Feb 2026
+56,172.16.2.192,64.00 GB,63.28 GB,95%(Memory),61- Instances in Feb 2026
+57,172.16.2.192,149.40 GB,134.46 GB,90%(Disk),06- Instances in Feb 2026
+58,192.168.1.36,292.97 GB,234.37 GB,80%(Disk),70- Instances in Feb 2026
+59,192.168.1.85,8 Core,85.46%,80%(CPU),08- Instances in Feb 2026
+60,192.168.1.85,62.26 GB,53.87 GB,80%(Memory),02- Instances in Feb 2026
+61,192.168.1.158,N/A,84.28%,80%(Memory),34- Instances in Feb 2026
+62,192.168.15.112,8 Core,94.56%,90%(CPU),06- Instances in Feb 2026
+63,192.168.15.128,32 Core,N/A,70%(CPU),34- Instances in Feb 2026
+64,192.168.176.119,N/A,N/A,70%(CPU),02- Instances in Feb 2026
+65,192.168.176.232,N/A,N/A,70%(CPU),02- Instances in Feb 2026
+66,192.168.176.235,N/A,N/A,70%(CPU),02- Instances in Feb 2026
+67,192.168.176.237,N/A,N/A,70%(CPU),02- Instances in Feb 2026
+68,10.0.60.3,31.88 GB,31.73 GB,90%(Memory),05- Instances in Mar 2026
+69,10.0.60.4,31.83 GB,31.39 GB,90%(Memory),16- Instances in Mar 2026
+70,10.0.60.5,31.66 GB,31.47 GB,90%(Memory),07- Instances in Mar 2026
+71,10.0.60.9,4 Core,N/A,70%(CPU),08- Instances in Mar 2026
+72,10.0.60.12,N/A,98.13%,90%(Memory),47- Instances in Mar 2026
+73,10.0.60.48,31.79 GB,29.70 GB,90%(Memory),03- Instances in Mar 2026
+74,10.0.60.64,31.68 GB,30.99 GB,90%(Memory),02- Instances in Mar 2026
+75,172.16.0.94,2.91 TB,2.62 TB,90%(Disk),161- Instances in Mar 2026
+76,172.16.0.94,64 Core,99.93%,95%(CPU),04- Instances in Mar 2026
+77,172.16.0.95,"2.91 TB, 5.82 TB",5.24 TB,90%(Disk),106- Instances in Mar 2026
+78,172.16.0.105,"1.45 TB, 1.75 TB",1.57 TB,90%(Disk),747- Instances in Mar 2026
+79,172.16.0.116,"1.75 TB, 208.43 GB, 893.75 GB",1.57 TB,90%(Disk),991- Instances in Mar 2026
+80,172.16.0.166,5.50 TB,4.95 TB,90%(Disk),04- Instances in Mar 2026
+81,172.16.0.181,63.96 GB,61.01 GB,95%(Memory),10- Instances in Mar 2026
+82,172.16.0.182,1.75 TB,1.57 TB,90%(Disk),14- Instances in Mar 2026
+83,172.16.0.189,8 Core,92.12%,90%(CPU),02- Instances in Mar 2026
+84,172.16.0.204,292.97 GB,263.67 GB,90%(Disk),36- Instances in Mar 2026
+85,172.16.0.251,N/A,95.17%,90%(Memory),04- Instances in Mar 2026
+86,172.16.0.251,N/A,90.00%,90%(Disk),09- Instances in Mar 2026
+87,172.16.1.104,224.30 GB,201.87 GB,90%(Disk),301- Instances in Mar 2026
+88,172.16.1.139,23.61 GB,21.25 GB,90%(Memory),270- Instances in Mar 2026
+89,172.16.1.139,4 Core,91.58%,90%(CPU),18- Instances in Mar 2026
+90,172.16.2.170,1.07 TB,990.00 GB,90%(Disk),40- Instances in Mar 2026
+91,172.16.2.191,32.00 GB,29.34 GB,90%(Memory),02- Instances in Mar 2026
+92,172.16.2.192,64.00 GB,63.37 GB,95%(Memory),32- Instances in Mar 2026
+93,192.168.1.36,292.97 GB,234.37 GB,80%(Disk),55- Instances in Mar 2026
+94,192.168.1.36,N/A,100.00%,80%(CPU),02- Instances in Mar 2026
+95,192.168.1.85,62.26 GB,60.95 GB,80%(Memory),04- Instances in Mar 2026
+96,192.168.1.96,N/A,82.14%,80%(Memory),06- Instances in Mar 2026
+97,192.168.1.158,N/A,83.70%,80%(Memory),58- Instances in Mar 2026
+98,192.168.1.158,149.51 GB,119.61 GB,80%(Disk),02- Instances in Mar 2026
+99,192.168.15.112,178.58 GB,160.72 GB,90%(Disk),329- Instances in Mar 2026
+100,192.168.15.128,32 Core,N/A,70%(CPU),34- Instances in Mar 2026
+101,192.168.176.111,N/A,N/A,70%(CPU),02- Instances in Mar 2026
+102,192.168.176.126,N/A,N/A,70%(CPU),02- Instances in Mar 2026
+103,192.168.176.127,N/A,N/A,70%(CPU),02- Instances in Mar 2026
+104,192.168.176.128,N/A,N/A,70%(CPU),02- Instances in Mar 2026
+105,192.168.176.140,N/A,70.97%,70%(CPU),02- Instances in Mar 2026
+106,192.168.176.224,N/A,N/A,70%(CPU),02- Instances in Mar 2026
+107,192.168.176.228,N/A,N/A,70%(CPU),02- Instances in Mar 2026
+108,192.168.176.229,N/A,N/A,70%(CPU),02- Instances in Mar 2026
+109,192.168.176.232,N/A,N/A,70%(CPU),02- Instances in Mar 2026
+110,192.168.176.233,N/A,N/A,70%(CPU),02- Instances in Mar 2026
+111,192.168.176.237,N/A,N/A,70%(CPU),04- Instances in Mar 2026
