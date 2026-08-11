@@ -1,0 +1,100 @@
+S.No.,Particulars,Installed Capacity,Utilised capacity,Highest Peak load observed during the quarter,No. of instances and dates when utilisation has gone beyond Severity of installed capacity
+1,192.168.1.141,N/A,N/A,Critical - Instance Down(Other),"04- Instances in Jul 2026, 02- Instances in Aug 2026"
+2,192.168.1.143,299.85 GB,149.93 GB,50%(Disk),03- Instances in Jul 2026
+3,192.168.1.143,N/A,N/A,Critical - Instance Down(Other),"06- Instances in Jul 2026, 04- Instances in Aug 2026"
+4,192.168.1.144,146.48 GB,142.09 GB,97%(Disk),394- Instances in Jul 2026
+5,192.168.1.144,146.48 GB,87.89 GB,60%(Disk),30- Instances in Jul 2026
+6,192.168.1.144,146.48 GB,95.21 GB,65%(Disk),08- Instances in Jul 2026
+7,192.168.1.144,146.48 GB,117.19 GB,80%(Disk),02- Instances in Jul 2026
+8,192.168.1.144,N/A,N/A,Critical - Instance Down(Other),"02- Instances in Jul 2026, 06- Instances in Aug 2026"
+9,192.168.1.145,354.23 GB,241.19 GB,68%(Disk),51- Instances in Jul 2026
+10,192.168.1.145,354.23 GB,212.54 GB,60%(Disk),51- Instances in Jul 2026
+11,192.168.1.145,354.23 GB,230.25 GB,65%(Disk),51- Instances in Jul 2026
+12,192.168.1.155,16 Core,67.62%,67%(CPU),02- Instances in Aug 2026
+13,192.168.1.155,299.98 GB,187.31 GB,62%(Disk),"195- Instances in Jul 2026, 80- Instances in Aug 2026"
+14,192.168.1.155,299.98 GB,179.99 GB,60%(Disk),"20- Instances in Jul 2026, 14- Instances in Aug 2026"
+15,192.168.1.155,64.00 GB,45.46 GB,71%(Memory),78- Instances in Jul 2026
+16,192.168.1.155,64.00 GB,45.44 GB,71%(Memory),"125- Instances in Jul 2026, 02- Instances in Aug 2026"
+17,192.168.1.155,N/A,N/A,Critical - Instance Down(Other),"04- Instances in Jul 2026, 61- Instances in Aug 2026"
+18,192.168.1.156,N/A,N/A,Critical - Instance Down(Other),"06- Instances in Jul 2026, 04- Instances in Aug 2026"
+19,192.168.1.159,455.64 GB,240.58 GB,52%(Disk),"239- Instances in Jul 2026, 117- Instances in Aug 2026"
+20,192.168.1.159,62.26 GB,37.36 GB,60%(Memory),12- Instances in Jul 2026
+21,192.168.1.159,62.26 GB,40.47 GB,65%(Memory),07- Instances in Jul 2026
+22,192.168.1.159,N/A,N/A,Critical - Instance Down(Other),"69- Instances in Jul 2026, 30- Instances in Aug 2026"
+23,192.168.1.160,N/A,N/A,Critical - Instance Down(Other),"16- Instances in Jul 2026, 14- Instances in Aug 2026"
+24,192.168.1.161,292.97 GB,146.48 GB,50%(Disk),"279- Instances in Jul 2026, 102- Instances in Aug 2026"
+25,192.168.1.161,292.97 GB,175.78 GB,60%(Disk),09- Instances in Jul 2026
+26,192.168.1.161,N/A,N/A,Critical - Instance Down(Other),"56- Instances in Jul 2026, 33- Instances in Aug 2026"
+27,192.168.1.165,N/A,N/A,Critical - Instance Down(Other),"04- Instances in Jul 2026, 06- Instances in Aug 2026"
+28,192.168.1.171,109.99 GB,65.99 GB,60%(Memory),83- Instances in Jul 2026
+29,192.168.1.171,109.99 GB,71.49 GB,65%(Memory),12- Instances in Jul 2026
+30,192.168.1.171,N/A,N/A,Critical - Instance Down(Other),"10- Instances in Jul 2026, 04- Instances in Aug 2026"
+31,192.168.1.172,449.86 GB,292.41 GB,65%(Disk),"107- Instances in Jul 2026, 05- Instances in Aug 2026"
+32,192.168.1.172,449.86 GB,409.64 GB,91%(Disk),"418- Instances in Jul 2026, 146- Instances in Aug 2026"
+33,192.168.1.172,449.86 GB,269.91 GB,60%(Disk),"137- Instances in Jul 2026, 17- Instances in Aug 2026"
+34,192.168.1.172,449.86 GB,359.89 GB,80%(Disk),07- Instances in Jul 2026
+35,192.168.1.172,N/A,N/A,Critical - Instance Down(Other),"08- Instances in Jul 2026, 07- Instances in Aug 2026"
+36,192.168.1.173,299.85 GB,269.21 GB,89%(Disk),"327- Instances in Jul 2026, 48- Instances in Aug 2026"
+37,192.168.1.173,299.85 GB,179.91 GB,60%(Disk),08- Instances in Jul 2026
+38,192.168.1.173,299.85 GB,194.90 GB,65%(Disk),05- Instances in Jul 2026
+39,192.168.1.173,299.85 GB,239.88 GB,80%(Disk),03- Instances in Jul 2026
+40,192.168.1.173,31.24 GB,18.75 GB,60%(Memory),19- Instances in Aug 2026
+41,192.168.1.173,N/A,N/A,Critical - Instance Down(Other),"08- Instances in Jul 2026, 02- Instances in Aug 2026"
+42,192.168.1.174,16 Core,98.00%,98%(CPU),02- Instances in Jul 2026
+43,192.168.1.174,199.98 GB,199.98 GB,100%(Disk),"50- Instances in Jul 2026, 84- Instances in Aug 2026"
+44,192.168.1.174,199.98 GB,119.99 GB,60%(Disk),"16- Instances in Jul 2026, 02- Instances in Aug 2026"
+45,192.168.1.174,199.98 GB,129.99 GB,65%(Disk),"08- Instances in Jul 2026, 02- Instances in Aug 2026"
+46,192.168.1.174,199.98 GB,159.99 GB,80%(Disk),"02- Instances in Jul 2026, 02- Instances in Aug 2026"
+47,192.168.1.174,16.00 GB,12.76 GB,79%(Memory),77- Instances in Jul 2026
+48,192.168.1.174,16.00 GB,12.76 GB,79%(Memory),02- Instances in Jul 2026
+49,192.168.1.174,N/A,N/A,Critical - Instance Down(Other),"06- Instances in Jul 2026, 12- Instances in Aug 2026"
+50,192.168.1.176,N/A,N/A,Critical - Instance Down(Other),"02- Instances in Jul 2026, 02- Instances in Aug 2026"
+51,192.168.1.190,16 Core,62.25%,62%(CPU),04- Instances in Jul 2026
+52,192.168.1.190,199.40 GB,99.70 GB,50%(Disk),05- Instances in Jul 2026
+53,192.168.1.190,N/A,N/A,Critical - Instance Down(Other),"56- Instances in Jul 2026, 28- Instances in Aug 2026"
+54,192.168.1.200,16 Core,98.00%,98%(CPU),02- Instances in Jul 2026
+55,192.168.1.200,558.57 GB,280.07 GB,50%(Disk),"34- Instances in Jul 2026, 12- Instances in Aug 2026"
+56,192.168.1.200,N/A,N/A,Critical - Instance Down(Other),"04- Instances in Jul 2026, 12- Instances in Aug 2026"
+57,192.168.1.202,N/A,N/A,Critical - Instance Down(Other),"56- Instances in Jul 2026, 22- Instances in Aug 2026"
+58,192.168.1.225,36 Core,78.45%,78%(CPU),"348- Instances in Jul 2026, 28- Instances in Aug 2026"
+59,192.168.1.225,36 Core,80.42%,80%(CPU),"44- Instances in Jul 2026, 02- Instances in Aug 2026"
+60,192.168.1.225,36 Core,85.36%,85%(CPU),02- Instances in Jul 2026
+61,192.168.1.225,600.00 GB,380.64 GB,63%(Disk),"584- Instances in Jul 2026, 271- Instances in Aug 2026"
+62,192.168.1.225,600.00 GB,360.00 GB,60%(Disk),"19- Instances in Jul 2026, 04- Instances in Aug 2026"
+63,192.168.1.225,64.00 GB,44.56 GB,69%(Memory),"552- Instances in Jul 2026, 89- Instances in Aug 2026"
+64,192.168.1.225,64.00 GB,46.79 GB,73%(Memory),"133- Instances in Jul 2026, 06- Instances in Aug 2026"
+65,192.168.1.225,N/A,N/A,Critical - Instance Down(Other),"21- Instances in Jul 2026, 12- Instances in Aug 2026"
+66,192.168.1.226,N/A,N/A,Critical - Instance Down(Other),"54- Instances in Jul 2026, 22- Instances in Aug 2026"
+67,192.168.1.227,15.65 GB,9.39 GB,60%(Memory),"06- Instances in Jul 2026, 09- Instances in Aug 2026"
+68,192.168.1.227,15.65 GB,10.18 GB,65%(Memory),"05- Instances in Jul 2026, 08- Instances in Aug 2026"
+69,192.168.1.227,15.65 GB,12.52 GB,80%(Memory),"06- Instances in Jul 2026, 09- Instances in Aug 2026"
+70,192.168.1.227,N/A,N/A,Critical - Instance Down(Other),"06- Instances in Jul 2026, 04- Instances in Aug 2026"
+71,192.168.1.227,N/A,N/A,Warning 60%(Other),"04- Instances in Jul 2026, 10- Instances in Aug 2026"
+72,192.168.1.227,N/A,N/A,Critical 80%(Other),"02- Instances in Jul 2026, 08- Instances in Aug 2026"
+73,192.168.1.227,N/A,N/A,Critical 65%(Other),"02- Instances in Jul 2026, 08- Instances in Aug 2026"
+74,192.168.1.59,N/A,N/A,Critical - Instance Down(Other),"02- Instances in Jul 2026, 10- Instances in Aug 2026"
+75,192.168.176.111,N/A,N/A,Critical - Instance Down(Other),02- Instances in Jul 2026
+76,192.168.176.117,292.97 GB,186.68 GB,63%(Disk),"68- Instances in Jul 2026, 80- Instances in Aug 2026"
+77,192.168.176.117,292.97 GB,175.78 GB,60%(Disk),20- Instances in Aug 2026
+78,192.168.176.117,N/A,N/A,Critical - Instance Down(Other),"02- Instances in Jul 2026, 02- Instances in Aug 2026"
+79,192.168.176.146,455.64 GB,238.07 GB,52%(Disk),49- Instances in Aug 2026
+80,192.168.176.146,N/A,N/A,Critical - Instance Down(Other),"22- Instances in Jul 2026, 12- Instances in Aug 2026"
+81,192.168.176.149,N/A,N/A,Critical - Instance Down(Other),"52- Instances in Jul 2026, 18- Instances in Aug 2026"
+82,192.168.176.151,N/A,N/A,Critical - Instance Down(Other),02- Instances in Jul 2026
+83,192.168.176.152,199.98 GB,119.99 GB,60%(Disk),76- Instances in Jul 2026
+84,192.168.176.152,146.48 GB,90.09 GB,61%(Disk),146- Instances in Jul 2026
+85,192.168.176.152,16.00 GB,10.15 GB,63%(Memory),02- Instances in Jul 2026
+86,192.168.176.152,N/A,N/A,Critical - Instance Down(Other),"02- Instances in Jul 2026, 02- Instances in Aug 2026"
+87,192.168.176.153,N/A,N/A,Critical - Instance Down(Other),"125- Instances in Jul 2026, 58- Instances in Aug 2026"
+88,192.168.176.154,299.85 GB,169.87 GB,56%(Disk),"07- Instances in Jul 2026, 155- Instances in Aug 2026"
+89,192.168.176.154,N/A,N/A,Critical - Instance Down(Other),"122- Instances in Jul 2026, 58- Instances in Aug 2026"
+90,192.168.176.155,317.34 GB,190.40 GB,60%(Disk),"88- Instances in Jul 2026, 08- Instances in Aug 2026"
+91,192.168.176.155,317.34 GB,206.27 GB,65%(Disk),60- Instances in Jul 2026
+92,192.168.176.155,317.34 GB,243.18 GB,76%(Disk),"361- Instances in Jul 2026, 139- Instances in Aug 2026"
+93,192.168.176.155,317.34 GB,253.87 GB,80%(Disk),04- Instances in Jul 2026
+94,192.168.176.155,N/A,N/A,Critical - Instance Down(Other),"06- Instances in Jul 2026, 04- Instances in Aug 2026"
+95,192.168.176.158,600.00 GB,340.08 GB,56%(Disk),"429- Instances in Jul 2026, 190- Instances in Aug 2026"
+96,192.168.176.158,N/A,N/A,Critical - Instance Down(Other),"54- Instances in Jul 2026, 18- Instances in Aug 2026"
+97,192.168.176.243,N/A,N/A,Critical - Instance Down(Other),02- Instances in Jul 2026
+98,192.168.176.244,N/A,N/A,Critical - Instance Down(Other),02- Instances in Jul 2026
+99,192.168.176.245,N/A,N/A,Critical - Instance Down(Other),02- Instances in Jul 2026
