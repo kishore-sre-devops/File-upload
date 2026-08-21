@@ -8,13 +8,13 @@ from 1st October 2025 to till date (2026-08-21).
 Features:
 - Parses Alertmanager JSON logs (/var/log/prometheus/alertmanager_events.log).
 - Filters for timestamp >= 2025-10-01 and Asset == 'CA'.
-- Includes dedicated Day, Month, and Year columns for granular analysis and Excel pivoting.
+- Includes dedicated Year, Month, Day, and Weekday columns for granular analysis and Excel pivoting.
 - Enriches records with live hardware specs from Prometheus and inventory metadata.
 - Calculates CPU, Memory, Disk volume capacities, free/used percentages and quantities.
 - Generates a multi-sheet, beautifully styled Excel (.xlsx) workbook:
-    1. 'Executive Summary' - KPI cards, monthly trends, resource distribution, top servers.
+    1. 'Executive Summary' - KPI cards, monthly trends, weekday distribution, resource distribution, top servers.
     2. 'CA Server Inventory' - Complete list of CA infrastructure servers with specs & alert counts.
-    3. 'CA Alert Details' - All 250k+ enriched alert records with Day, Month, Year columns.
+    3. 'CA Alert Details' - All 250k+ enriched alert records with Year, Month, Day, Weekday columns.
 - Outputs to /opt/audit_report/ and automatically syncs to /opt/audit_report/File-upload/.
 """
 
@@ -48,6 +48,7 @@ HEADERS = [
     "Year",
     "Month",
     "Day",
+    "Weekday",
     "Alert Name",
     "Asset",
     "Instance",
@@ -326,7 +327,7 @@ def format_row(
     hw_specs: Dict[str, Dict[str, Any]],
     inv_specs: Dict[str, Dict[str, Any]]
 ) -> List[Any]:
-    """Format single alert record into CSV/Excel row with Day, Month, Year."""
+    """Format single alert record into CSV/Excel row with Year, Month, Day, Weekday."""
     ts: datetime = r["ts"]
     alert: str = r["alert"]
     inst: str = r["instance"]
@@ -338,6 +339,7 @@ def format_row(
     year_val = ts.year
     month_val = ts.strftime("%B")
     day_val = ts.day
+    weekday_val = ts.strftime("%A")
 
     spec = hw_specs.get(inst, {})
     inv = inv_specs.get(inst, {})
@@ -423,6 +425,7 @@ def format_row(
         year_val,
         month_val,
         day_val,
+        weekday_val,
         alert,
         "CA",
         inst,
@@ -469,7 +472,6 @@ def generate_excel_report(
     regular_font = Font(name="Segoe UI", size=10)
 
     header_fill = PatternFill(start_color="1F4E78", end_color="1F4E78", fill_type="solid")
-    subhdr_fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
 
     def make_cell(ws, val, font=regular_font, fill=None, align=None):
         c = openpyxl.cell.WriteOnlyCell(ws, value=val)
@@ -486,6 +488,8 @@ def generate_excel_report(
     alert_counts = Counter(r["alert"] for r in records)
     sev_counts = Counter(r["severity"] for r in records)
     month_counts = Counter(r["ts"].strftime("%Y-%m (%B %Y)") for r in records)
+    weekday_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    weekday_counts = Counter(r["ts"].strftime("%A") for r in records)
 
     vital_counts = Counter()
     for r in records:
@@ -544,8 +548,25 @@ def generate_excel_report(
         ])
     ws_sum.append([])
 
+    # Weekday Breakdown Table
+    ws_sum.append([make_cell(ws_sum, "3. Alert Breakdown by Day of Week (Weekday)", font=section_font)])
+    ws_sum.append([
+        make_cell(ws_sum, "Weekday", font=header_font, fill=header_fill),
+        make_cell(ws_sum, "Alert Count", font=header_font, fill=header_fill),
+        make_cell(ws_sum, "% Share", font=header_font, fill=header_fill)
+    ])
+    for wd in weekday_order:
+        cnt = weekday_counts.get(wd, 0)
+        pct = (cnt / total_alerts * 100) if total_alerts > 0 else 0
+        ws_sum.append([
+            make_cell(ws_sum, wd),
+            make_cell(ws_sum, cnt),
+            make_cell(ws_sum, f"{pct:.2f}%")
+        ])
+    ws_sum.append([])
+
     # Vital Category Breakdown
-    ws_sum.append([make_cell(ws_sum, "3. Alert Breakdown by Resource / Vital Category", font=section_font)])
+    ws_sum.append([make_cell(ws_sum, "4. Alert Breakdown by Resource / Vital Category", font=section_font)])
     ws_sum.append([
         make_cell(ws_sum, "Vital Resource Category", font=header_font, fill=header_fill),
         make_cell(ws_sum, "Alert Count", font=header_font, fill=header_fill),
@@ -561,7 +582,7 @@ def generate_excel_report(
     ws_sum.append([])
 
     # Severity Breakdown
-    ws_sum.append([make_cell(ws_sum, "4. Alert Breakdown by Severity", font=section_font)])
+    ws_sum.append([make_cell(ws_sum, "5. Alert Breakdown by Severity", font=section_font)])
     ws_sum.append([
         make_cell(ws_sum, "Severity Level", font=header_font, fill=header_fill),
         make_cell(ws_sum, "Alert Count", font=header_font, fill=header_fill),
@@ -577,7 +598,7 @@ def generate_excel_report(
     ws_sum.append([])
 
     # Top Impacted CA Servers
-    ws_sum.append([make_cell(ws_sum, "5. Top 20 Most Impacted CA Servers", font=section_font)])
+    ws_sum.append([make_cell(ws_sum, "6. Top 20 Most Impacted CA Servers", font=section_font)])
     ws_sum.append([
         make_cell(ws_sum, "Server IP", font=header_font, fill=header_fill),
         make_cell(ws_sum, "Job / HostName", font=header_font, fill=header_fill),
@@ -638,7 +659,7 @@ def generate_excel_report(
         ])
 
     # -------------------------------------------------------------
-    # 3. Sheet 3: Full CA Alert Details (All 250k+ records with Day, Month, Year)
+    # 3. Sheet 3: Full CA Alert Details (All 250k+ records with Year, Month, Day, Weekday)
     # -------------------------------------------------------------
     ws_det = wb.create_sheet(title="CA Alert Details")
     ws_det.append([
@@ -667,7 +688,7 @@ def generate_excel_report(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate comprehensive XLSX report for CA asset alerts with Day, Month, Year from Oct 1, 2025 to till date."
+        description="Generate comprehensive XLSX report for CA asset alerts with Year, Month, Day, Weekday from Oct 1, 2025 to till date."
     )
     parser.add_argument(
         "--start-date",
