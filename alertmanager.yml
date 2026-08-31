@@ -1,0 +1,4250 @@
+global:
+  resolve_timeout: 1m
+  http_config:
+    tls_config:
+      insecure_skip_verify: true
+
+inhibit_rules:
+  - source_matchers:
+      - severity =~ ".*[Cc]ritical.*"
+    target_matchers:
+      - severity =~ ".*[Ww]arning.*|.*[Ii]nfo.*"
+    equal: ['alertname', 'instance']
+
+route:
+  receiver: 'email-slack-notifications'
+  group_by: ['...']
+  group_wait: 15s
+  group_interval: 5m
+  repeat_interval: 1h
+
+  routes:
+#..................................................Jira Ticket..............................................
+  - match:
+    receiver: 'log-to-file-STX'
+    continue: true
+  - match:
+      severity: "Critical 50%"
+    receiver: 'jira-email_90%'
+    continue: true
+  - match:
+      severity: "Critical 90%"
+    receiver: 'jira-email_90%'
+    continue: true
+  - match:
+      severity: "Critical 95%"
+    receiver: 'jira-email_95%'
+    continue: true
+  - match:
+      severity: "Warning 60%"
+    receiver: 'jira-email_60%'
+    continue: true
+  - match:
+      severity: "Critical 65%"
+    receiver: 'jira-email_65%'
+    continue: true
+  - match:
+      severity: "Critical 75%"
+    receiver: 'jira-email_75%'
+    continue: true
+
+  - match:
+      severity: "Critical - Instance Down"
+    receiver: 'jira-email_InstanceDown'
+    continue: true
+  - match:
+      severity: "critical service down"
+    receiver: 'jira-email_critical service down'
+    continue: true
+
+  - match:
+      severity: "critical"
+    receiver: 'jira-email_critical service down'
+    continue: true
+
+  - match:
+      severity: "warning"
+    receiver: 'jira-email_critical service down'
+    continue: true
+
+  - match:
+      severity: "info"
+    receiver: 'jira-email_critical service down'
+    continue: true
+
+  - match:
+      severity: 'critical-api-port'
+    receiver: 'jira-critical-api-port'
+    continue: true      
+
+#-----------------------------------bandwidth-monitoring-----------------------------------------------------
+  - match:
+      group: 'bandwidth-monitoring'
+    receiver: 'email-bandwidth-monitoring'
+    continue: true
+
+  - match:
+      group: 'bandwidth-monitoring'
+    receiver: 'bandwidth-monitoring-slack'
+    continue: true
+
+#......................................vinayb_api API and Port alerts email....................................
+  - match:
+      group: "vinayb_api"
+      severity: 'critical-api-port'
+    receiver: 'email-vinayb_api-critical-api-port'
+    continue: true
+#.....................................vinayb_api API and Port alerts slack.....................................
+  - match:
+      group: "vinayb_api"
+    receiver: 'vinayb_api api and port slack'
+    continue: true
+#.....................................Pre-Trade-Team API and Port alerts email....................................
+  - match:
+      group: "Pre-Trade-Team"
+      severity: 'critical-api-port'
+    receiver: 'email-Pre-Trade-Team-critical-api-port'
+    continue: true
+#.....................................Pre-Trade-Team API and Port alerts slack.....................................
+  - match:
+      group: "Pre-Trade-Team"
+    receiver: 'Pre-Trade-Team api and port slack'
+    continue: true
+#.....................................live-middleware-servers API and Port alerts email....................................
+  - match:
+      group: "live-middleware-servers"
+      severity: 'critical-api-port'
+    receiver: 'email-live-middleware-servers-critical-api-port'
+    continue: true
+#.....................................live-middleware-servers API and Port alerts slack.....................................
+  - match:
+      group: "live-middleware-servers"
+    receiver: 'live-middleware-servers api and port slack'
+    continue: true
+#.....................................ekyc-2-apis API and Port alerts email....................................
+  - match:
+      severity: 'critical-api-port'
+      group: 'ekyc-2-api'  
+    receiver: 'email-ekyc-2-apis-critical-api-port'
+    continue: true
+#......................................ekyc-2-apis API and Port alerts slack.....................................
+  - match:
+      group: "ekyc-2-api"
+    receiver: 'ekyc-2-apis api and port slack'
+    continue: true
+#.....................................devops-team API and Port alerts email....................................
+  - match:
+      group: "devops-team"
+      severity: 'critical-api-port'
+    receiver: 'email-devops-team-critical-api-port'
+    continue: true
+#....................................devops-team API and Port alerts slack.....................................
+  - match:
+      group: "devops-team"
+    receiver: 'devops-team api and port slack'
+    continue: true
+#....................................customer-engagement-and-retention API and Port alerts email............................
+  - match:
+      group: "customer-engagement-and-retention"
+      severity: 'critical-api-port'
+    receiver: 'email-customer-engagement-and-retention-critical-api-port'
+    continue: true
+
+#....................................customer-engagement-and-retention API and Port alerts slack............................
+  - match:
+      group: "customer-engagement-and-retention"
+    receiver: 'customer-engagement-and-retention api and port slack'
+    continue: true
+#....................................BuisnessDashboard API and Port alerts email....................................
+  - match:
+      group: "Business Dashboard Prod"
+      severity: 'critical-api-port'
+    receiver: 'email-Business Dashboard Prod-critical-api-port'
+    continue: true
+#....................................BuisnessDashboard API and Port alerts slack.....................................
+  - match:
+      group: "BuisnessDashboard"
+    receiver: 'BuisnessDashboard api and port slack'
+    continue: true
+#....................................Business Dashboard Prod API and Port alerts email....................................
+  - match:
+      group: "Business Dashboard Prod"
+      severity: 'critical-api-port'
+    receiver: 'email-Business Dashboard Prod-critical-api-port'
+    continue: true
+
+#....................................Business Dashboard Prod API and Port alerts slack.....................................
+  - match:
+      group: "Business Dashboard Prod"
+    receiver: 'Business Dashboard Prod api and port slack'
+    continue: true
+#....................................bo-data-monitoring API and Port alerts email....................................
+  - match:
+      group: "bo-data-monitoring"
+      severity: 'critical-api-port'
+    receiver: 'email-bo-data-monitoring-critical-api-port'
+    continue: true
+
+#....................................bo-data-monitoring API and Port alerts slack.....................................
+  - match:
+      group: "bo-data-monitoring"
+    receiver: 'bo-data-monitoring api and port slack'
+    continue: true      
+#.......................................IDG-Team Sarver alerts....................................
+  - match:
+      group: "IDG"
+      severity: "Critical 90%"
+    receiver: 'email-IDG-Critical'
+    continue: true
+  - match:
+      group: "IDG"
+      severity: "Critical 50%"
+    receiver: 'email-IDG-Critical'
+    continue: true
+  - match:
+      group: "IDG"
+      severity: "Critical - Instance Down"
+    receiver: 'email-IDG-InstanceDown'
+    continue: true
+#.......................................Marketing-Tech-Subscription Sarver alerts....................................
+  - match:
+      group: "Marketing-Tech-Subscription"
+      severity: "Critical 50%"
+    receiver: 'email-Marketing-Tech-Subscription-Critical'
+    continue: true
+  - match:
+      group: "Marketing-Tech-Subscription"
+      severity: "Critical 90%"
+    receiver: 'email-Marketing-Tech-Subscription-Critical'
+    continue: true
+  - match:
+      group: "Marketing-Tech-Subscription"
+      severity: "Critical - Instance Down"
+    receiver: 'email-Marketing-Tech-Subscription-InstanceDown'
+    continue: true
+#......................./Infra-Team-VSNL Email Conf......................
+  - match:
+      group: 'Infra-Team-VSNL'
+      severity: 'Critical 50%'
+    receiver: 'email-Infra-Team-VSNL-Critical'
+    continue: true
+  - match:
+      group: 'Infra-Team-VSNL'
+      severity: 'Critical 90%'
+    receiver: 'email-Infra-Team-VSNL-Critical'
+    continue: true
+  - match:
+      group: 'Infra-Team-VSNL'
+      severity: "Critical - Instance Down"
+    receiver: 'email-Infra-Team-VSNL-InstanceDown'
+    continue: true
+#.......................................Mail Sarver alerts....................................
+  - match:
+      group: "Mail"
+      severity: "Critical 50%"
+    receiver: 'email-Mail-Critical'
+    continue: true
+  - match:
+      group: "Mail"
+      severity: "Critical 90%"
+    receiver: 'email-Mail-Critical'
+    continue: true
+  - match:
+      group: "Mail"
+      severity: "Critical - Instance Down"
+    receiver: 'email-Mail-InstanceDown'
+    continue: true
+#........................IDG-Team Server Slack.....................................
+  - match:
+      group: IDG
+    receiver: IDG
+    continue: true
+#.......................................Broadcast Selected Servers Alerts to Only Kevin Mail Id.................................... 
+  - match:
+      service: "Research-Guest-login"
+      severity: "Critical 50%"
+    receiver: 'email-Research-Guest-login-Critical'
+    continue: true
+  - match:
+      service: "Research-Guest-login"
+      severity: "Critical 90%"
+    receiver: 'email-Research-Guest-login-Critical'
+    continue: true
+  - match:
+      service: "Research-Guest-login"      
+      severity: "Critical - Instance Down"
+    receiver: 'email-Research-Guest-login-InstanceDown'
+    continue: true
+#.......................................Talisma Sarver alerts to Only Rajkishore Mail Id....................................
+  - match:
+      group: "TalismaServer"
+      severity: "Critical 50%"
+    receiver: 'email-TalismaServer-Rajkishore-Critical'
+    continue: true
+  - match:
+      group: "TalismaServer"
+      severity: "Critical 90%"
+    receiver: 'email-TalismaServer-Rajkishore-Critical'
+    continue: true
+  - match:
+      service: "TalismaServer"
+      severity: "Critical - Instance Down"
+    receiver: 'email-TalismaServer-Rajkishore-InstanceDown'
+    continue: true
+#.......................................BusinessDashboard Sarver alerts....................................
+  - match:
+      group: "BusinessDashboard"
+      severity: "Critical 50%"
+    receiver: 'email-BusinessDashboard-Critical'
+    continue: true
+  - match:
+      group: "BusinessDashboard"
+      severity: "Critical 90%"
+    receiver: 'email-BusinessDashboard-Critical'
+    continue: true
+  - match:
+      group: "BusinessDashboard"
+      severity: "Critical - Instance Down"
+    receiver: 'email-BusinessDashboard-InstanceDown'
+    continue: true
+#........................BusinessDashboard Server Slack.....................................
+  - match:
+      group: BusinessDashboard
+    receiver: BusinessDashboard
+    continue: true
+#.......................................BusinessDashboard-Prod Sarver alerts....................................
+  - match:
+      group: "BusinessDashboard-Prod"
+      severity: "Critical 50%"
+    receiver: 'email-BusinessDashboard-Prod-Critical'
+    continue: true
+  - match:
+      group: "BusinessDashboard-Prod"
+      severity: "Critical 90%"
+    receiver: 'email-BusinessDashboard-Prod-Critical'
+    continue: true
+  - match:
+      group: "BusinessDashboard-Prod"
+      severity: "Critical - Instance Down"
+    receiver: 'email-BusinessDashboard-Prod-InstanceDown'
+    continue: true
+#........................BusinessDashboard-Prod Server Slack.....................................
+  - match:
+      group: BusinessDashboard-Prod
+    receiver: BusinessDashboard-Prod
+    continue: true
+#.....................Pre-Trade-team Email-------------------------------------
+  - match:
+      group: Pre-Trade-Team
+      severity: "Critical 50%"
+    receiver: 'email-Pre-Trade-Team-Critical'
+    continue: true
+  - match:
+      group: Pre-Trade-Team 
+      severity: "Critical 90%"
+    receiver: 'email-Pre-Trade-Team-Critical'
+    continue: true
+  - match:
+      group: Pre-Trade-Team
+      severity: "Critical - Instance Down"
+    receiver: 'email-Pre-Trade-Team-InstanceDown'
+    continue: true
+
+  - match:
+      group: Pre-Trade-Team
+      severity: "Critical-Port-Down"
+    receiver: 'email-Pre-Trade-Team-Port-Down'
+    continue: true
+
+  - match:
+      group: Pre-Trade-Team
+      severity: "Critical-Uptime"
+    receiver: 'email-Pre-Trade-Team-Uptime'
+    continue: true
+#.......................SRE Email Conf......................
+  - match:
+      group: SRE-team
+      severity: "Critical 50%"
+    receiver: 'email-sre-Critical'
+    continue: true
+  - match:
+      group: SRE-team
+      severity: "Critical 90%"
+    receiver: 'email-sre-Critical'
+    continue: true
+  - match:
+      group: SRE-team
+      severity: "Critical - Instance Down"
+    receiver: 'email-sre-InstanceDown'
+    continue: true
+#.......................Notification-center Email Conf......................
+  - match:
+      group: Notification-center
+      severity: "Critical 50%"
+    receiver: 'email-Notification-center-Critical'
+    continue: true
+  - match:
+      group: Notification-center
+      severity: "Critical 90%"
+    receiver: 'email-Notification-center-Critical'
+    continue: true
+  - match:
+      group: Notification-center
+      severity: "Critical - Instance Down"
+    receiver: 'email-Notification-center-InstanceDown'
+    continue: true
+#.......................Payment Getter Service Email Conf......................
+  - match:
+      group: Payment Getter Service
+      severity: "Critical 50%"
+    receiver: 'email-Payment Getter Service-Critical'
+    continue: true
+  - match:
+      group: Payment Getter Service
+      severity: "Critical 90%"
+    receiver: 'email-Payment Getter Service-Critical'
+    continue: true
+  - match:
+      group: Payment Getter Service
+      severity: "Critical - Instance Down"
+    receiver: 'email-Payment Getter Service-InstanceDown'
+    continue: true
+#.......................Partner-Portal Email Conf......................
+  - match:
+      group: Partner-Portal
+      severity: "Critical 50%"
+    receiver: 'email-Partner-Portal-Critical'
+    continue: true
+  - match:
+      group: Partner-Portal
+      severity: "Critical 90%"
+    receiver: 'email-Partner-Portal-Critical'
+    continue: true
+  - match:
+      group: Partner-Portal
+      severity: "Critical - Instance Down"
+    receiver: 'email-Partner-Portal-InstanceDown'
+    continue: true
+#.......................Marketing-Tech Email Conf......................
+  - match:
+      group: Marketing-Tech
+      severity: "Critical 50%"
+    receiver: 'email-Marketing-Tech-Critical'
+    continue: true
+  - match:
+      group: Marketing-Tech
+      severity: "Critical 90%"
+    receiver: 'email-Marketing-Tech-Critical'
+    continue: true
+  - match:
+      group: Marketing-Tech
+      severity: "Critical - Instance Down"
+    receiver: 'email-Marketing-Tech-InstanceDown'
+    continue: true
+#.......................CRM Email Conf......................
+  - match:
+      group: Talisma_CRM
+      severity: "Critical 50%"
+    receiver: 'email-Talisma_CRM-Critical'
+    continue: true
+  - match:
+      group: Talisma_CRM
+      severity: "Critical 90%"
+    receiver: 'email-Talisma_CRM-Critical'
+    continue: true
+  - match:
+      group: Talisma_CRM
+      severity: "Critical - Instance Down"
+    receiver: 'email-Talisma_CRM-InstanceDown'
+    continue: true
+#.......................Margin-Arbitrage-HFT Email Conf......................
+  - match:
+      group2: Margin-Arbitrage-HFT
+      severity: "Critical 50%"
+    receiver: 'email-Margin-Arbitrage-HFT-Critical'
+    continue: true
+  - match:
+      group2: Margin-Arbitrage-HFT
+      severity: "Critical 90%"
+    receiver: 'email-Margin-Arbitrage-HFT-Critical'
+    continue: true
+  - match:
+      group2: Margin-Arbitrage-HFT
+      severity: "Critical - Instance Down"
+    receiver: 'email-Margin-Arbitrage-HFT-InstanceDown'
+    continue: true
+# - match:
+#      alert_group: Margin-Arbitrage-HFT
+#    receiver: Margin-Arbitrage-HFT-logs
+      
+#.......................Middleware Email Conf......................
+  - match:
+      group: Middleware
+      severity: "Critical 50%"
+    receiver: 'email-Middleware-Critical'
+    continue: true
+  - match:
+      group: Middleware
+      severity: "Critical 90%"
+    receiver: 'email-Middleware-Critical'
+    continue: true
+  - match:
+      group: Middleware
+      severity: "Critical - Instance Down"
+    receiver: 'email-Middleware-InstanceDown'
+    continue: true
+  - match:
+      alert_group: Middleware
+    receiver: Middleware-logs
+#.......................UAT-Middleware-Testing Email Conf......................
+  - match:
+      job: 'UAT-Middleware-Testing' 
+      severity: "Critical 90%"
+    receiver: 'email-UAT-Middleware-Testing-Critical'
+    continue: true
+  - match:
+      job: 'UAT-Middleware-Testing' 
+      severity: "Critical - Instance Down"
+    receiver: 'email-UAT-Middleware-Testing-InstanceDown'
+    continue: true
+#.......................Aniket DB Alerts for Class Database Email Conf......................
+  - match:
+      job: 'ClassSmc-ClassStk'
+      severity: "Critical 90%"
+    receiver: 'Aniket DB Alerts for Class Database'
+    continue: true
+  - match:
+      job: 'Class Database production HA'
+      severity: "Critical 90%"
+    receiver: 'Aniket DB Alerts for Class Database'
+    continue: true
+#.......................SunAccApp_Server Email Conf......................
+  - match:
+      job: 'SunAccApp_Server'
+      severity: "Critical 90%"
+    receiver: 'email-SunAccApp_Server-Critical'
+    continue: true
+  - match:
+      job: 'SunAccApp_Server'
+      severity: "Critical - Instance Down"
+    receiver: 'email-SunAccApp_Server-InstanceDown'
+    continue: true
+#.......................SMC-Talisma-Mail-Server Email Conf......................
+  - match:
+      job: 'SMC-Talisma-Mail-Server'
+      severity: "Critical 90%"
+    receiver: 'email-SMC-Talisma-Mail-Server-Critical'
+    continue: true
+  - match:
+      job: 'SMC-Talisma-Mail-Server'
+      severity: "Critical - Instance Down"
+    receiver: 'email-SMC-Talisma-Mail-Server-InstanceDown'
+    continue: true
+#.......................Broadcast Email Conf......................
+  - match:
+      group: Broadcast
+      severity: "Critical 50%"
+    receiver: 'email-Broadcast-Critical'
+    continue: true
+  - match:
+      group: Broadcast
+      severity: "Critical 90%"
+    receiver: 'email-Broadcast-Critical'
+    continue: true
+  - match:
+      group: Broadcast
+      severity: "Critical - Instance Down"
+    receiver: 'email-Broadcast-InstanceDown'
+    continue: true
+#.......................BackOffice Email Conf......................
+  - match:
+      group: BackOffice
+      severity: "Critical 50%"
+    receiver: 'email-Backoffice-Critical'
+    continue: true
+  - match:
+      group: BackOffice
+      severity: "Critical 90%"
+    receiver: 'email-Backoffice-Critical'
+    continue: true
+  - match:
+      group: BackOffice
+      severity: "Critical - Instance Down"
+    receiver: 'email-Backoffice-InstanceDown'
+    continue: true
+#.......................Subscription Email Conf......................
+  - match:
+      group: Subscription
+      severity: "Critical 50%"
+    receiver: 'email-Subscription-Critical'
+    continue: true
+  - match:
+      group: Subscription
+      severity: "Critical 90%"
+    receiver: 'email-Subscription-Critical'
+    continue: true
+  - match:
+      group: Subscription
+      severity: "Critical - Instance Down"
+    receiver: 'email-Subscription-InstanceDown'
+    continue: true
+#.......................Research team Email Conf......................
+  - match:
+      group: 'Research team'
+      severity: "Critical 50%"
+    receiver: 'email-Research team-Critical'
+    continue: true
+  - match:
+      group: 'Research team'
+      severity: "Critical 90%"
+    receiver: 'email-Research team-Critical'
+    continue: true
+  - match:
+      group: 'Research team'
+      severity: "Critical - Instance Down"
+    receiver: 'email-Research team-InstanceDown'
+    continue: true
+#.......................Product-team Email Conf......................
+#  - match:
+#      group: 'Product-team'
+#      severity: "Critical 90%"
+#    receiver: 'email-Product-team-Critical'
+#    continue: true
+#  - match:
+#      group: 'Product-team'
+#      severity: "Critical - Instance Down"
+#    receiver: 'email-Product-team-InstanceDown'
+#    continue: true
+  - match:
+      group: 'Product-team'
+    receiver: 'email-Product-team'
+    continue: true
+#.......................Optimum Email Conf......................
+  - match:
+      group: 'Optimum'
+      severity: "Critical 50%"
+    receiver: 'email-Optimum-Critical'
+    continue: true
+  - match:
+      group: 'Optimum'
+      severity: "Critical 90%"
+    receiver: 'email-Optimum-Critical'
+    continue: true
+  - match:
+      group: 'Optimum'
+      severity: "Critical - Instance Down"
+    receiver: 'email-Optimum-InstanceDown'
+    continue: true
+#.......................NBFC Email Conf......................
+  - match:
+      group: 'NBFC'
+      severity: "Critical 50%"
+    receiver: 'email-NBFC-Critical'
+    continue: true
+  - match:
+      group: 'NBFC'
+      severity: "Critical 90%"
+    receiver: 'email-NBFC-Critical'
+    continue: true
+  - match:
+      group: 'NBFC'
+      severity: "Critical - Instance Down"
+    receiver: 'email-NBFC-InstanceDown'
+    continue: true
+#.......................LAMA Email Conf......................
+  - match:
+      group: 'LAMA'
+    receiver: 'email-LAMA'
+    continue: true
+#.......................DR-Trading Email Conf......................
+  - match:
+      group: 'DR-Trading-Systems'
+    receiver: 'email-DR-Trading-Systems'
+    continue: true
+#.......................DR-Trading -LAMA Email Conf......................
+  - match:
+      group: 'DR-Trading-LAMA-Systems'
+    receiver: 'email-DR-Trading-LAMA-Systems'
+    continue: true
+#.......................Infra-Team-Cezentrix Email Conf......................
+  - match:
+      group: 'Infra-Team-Cezentrix'
+      severity: "Critical 50%"
+    receiver: 'email-Infra-Team-Cezentrix-Critical-Disk75'
+    continue: true
+  - match:
+      group: 'Infra-Team-Cezentrix'
+      severity: "Critical 75%"
+    receiver: 'email-Infra-Team-Cezentrix-Critical-Disk75'
+    continue: true
+  - match:
+      group: 'Infra-Team-Cezentrix'
+      severity: "Critical 90%"
+    receiver: 'email-Infra-Team-Cezentrix-Critical'
+    continue: true
+  - match:
+      group: 'Infra-Team-Cezentrix'
+      severity: "Critical - Instance Down"
+    receiver: 'email-Infra-Team-Cezentrix-InstanceDown'
+    continue: true
+#.......................Infra-Team-Antivirus KIT Email Conf......................
+  - match:
+      group: 'Infra-Team-Antivirus KIT'
+      severity: "Critical 50%"
+    receiver: 'email-Infra-Team-Antivirus KIT-Critical'
+    continue: true
+  - match:
+      group: 'Infra-Team-Antivirus KIT'
+      severity: "Critical 90%"
+    receiver: 'email-Infra-Team-Antivirus KIT-Critical'
+    continue: true
+  - match:
+      group: 'Infra-Team-Antivirus KIT'
+      severity: "Critical - Instance Down"
+    receiver: 'email-Infra-Team-Antivirus KIT-InstanceDown'
+    continue: true
+#.......................HR Email Conf......................
+  - match:
+      group: 'HR'
+      severity: "Critical 50%"
+    receiver: 'email-HR-Critical'
+    continue: true
+  - match:
+      group: 'HR'
+      severity: "Critical 90%"
+    receiver: 'email-HR-Critical'
+    continue: true
+  - match:
+      group: 'HR'
+      severity: "Critical - Instance Down"
+    receiver: 'email-HR-InstanceDown'
+    continue: true
+#.......................Compliance Team Email Conf......................
+  - match:
+      group: 'Compliance Team'
+      severity: "Critical 50%"
+    receiver: 'email-Compliance Team-Critical'
+    continue: true
+  - match:
+      group: 'Compliance Team'
+      severity: "Critical 90%"
+    receiver: 'email-Compliance Team-Critical'
+    continue: true
+  - match:
+      group: 'Compliance Team'
+      severity: "Critical - Instance Down"
+    receiver: 'email-Compliance Team-InstanceDown'
+    continue: true
+#.......................Branding-Team Email Conf......................
+  - match:
+      group: 'Branding-Team'
+      severity: "Critical 90%"
+    receiver: 'email-Branding-Team-Critical'
+    continue: true
+  - match:
+      group: 'Branding-Team'
+      severity: "Critical 90%"
+    receiver: 'email-Branding-Team-Critical'
+    continue: true
+  - match:
+      group: 'Branding-Team'
+      severity: "Critical - Instance Down"
+    receiver: 'email-Branding-Team-InstanceDown'
+    continue: true
+#........................Oracle Match Email and Slack......................................
+  - match:
+      severity: "Critical - Instance Down"
+      database: "ORACLE"
+    receiver: 'email-DBA-Team-InstanceDown-ORACLE'
+    continue: true
+
+  - match:
+      severity: 'critical service down'
+      database: "ORACLE"
+    receiver: 'email-DBA-Team-Service Down-ORACLE'
+    continue: true
+
+  - match:
+      severity: "Critical 95%"
+      database: "ORACLE"
+    receiver: 'email-DBA-Team-Critical-ORACLE'
+    continue: true
+
+  - match:
+      severity: "Warning 85%"
+      database: "ORACLE"
+    receiver: 'email-DBA-Team-Warning-ORACLE'
+    continue: true
+
+  - match:
+      severity: "Critical 90%"
+      database: "ORACLE"
+    receiver: 'email-DBA-Team-Disk-Critical-ORACLE' 
+    continue: true
+
+  - match:
+      severity: "Critical 50%"
+      database: "ORACLE"
+    receiver: 'email-DBA-Team-Disk-Critical-ORACLE'
+    continue: true
+
+  - match:
+      severity: 'Warning 80%'
+      database: "ORACLE"
+    receiver: 'email-DBA-Team-Disk-Warning-ORACLE'
+    continue: true
+
+  - match:
+      severity: "Critical - Instance Down"
+      database: "ORACLE"
+    receiver: 'slack-DBA-Team-InstanceDown-ORACLE'
+    continue: true
+
+  - match:
+      severity: 'critical service down'
+      database: "ORACLE"
+    receiver: 'slack-DBA-Team-Service Down-ORACLE'
+    continue: true
+
+  - match:
+      severity: "Critical 95%"
+      database: "ORACLE"
+    receiver: 'slack-DBA-Team-Critical-ORACLE'
+    continue: true
+
+  - match:
+      severity: "Warning 85%"
+      database: "ORACLE"
+    receiver: 'slack-DBA-Team-Warning-ORACLE'
+    continue: true
+
+  - match:
+      severity: "Critical 90%"
+      database: "ORACLE"
+    receiver: 'slack-DBA-Team-Disk-Critical-ORACLE'
+    continue: true
+
+  - match:
+      severity: 'Warning 80%'
+      database: "ORACLE"
+    receiver: 'slack-DBA-Team-Disk-Warning-ORACLE'
+    continue: true	
+#-------------------------------MSSQL Match Email and Slack-------------------------------
+  - match:
+      severity: "Critical - Instance Down"
+      database: "MSSQL"
+    receiver: 'email-DBA-Team-InstanceDown-MSSQL'
+    continue: true
+
+  - match:
+      severity: 'critical service down'
+      database: "MSSQL"
+    receiver: 'email-DBA-Team-Service Down-MSSQL'
+    continue: true
+
+  - match:
+      database: "MSSQL"
+      severity: 'warning'
+    receiver: 'MSSQL-DATABASE-Error-DBA-Team'
+    continue: true
+
+  - match:
+      severity: "Critical 95%"
+      database: "MSSQL"
+    receiver: 'email-DBA-Team-Critical-MSSQL'
+    continue: true
+
+  - match:
+      severity: "Warning 85%"
+      database: "MSSQL"
+    receiver: 'email-DBA-Team-Warning-MSSQL'
+    continue: true
+
+  - match:
+      severity: "Critical 90%"
+      database: "MSSQL"
+    receiver: 'email-DBA-Team-Disk-Critical-MSSQL'
+    continue: true
+
+  - match:
+      severity: "Critical 50%"
+      database: "MSSQL"
+    receiver: 'email-DBA-Team-Disk-Critical-MSSQL'
+    continue: true
+
+  - match:
+      severity: "Warning 80%"
+      database: "MSSQL"
+    receiver: 'email-DBA-Team-Disk-Warning-MSSQL'
+    continue: true
+
+  - match:
+      severity: "Critical - Instance Down"
+      database: "MSSQL"
+    receiver: 'slack-DBA-Team-InstanceDown-MSSQL'
+    continue: true
+
+  - match:
+      severity: 'critical service down'
+      database: "MSSQL"
+    receiver: 'slack-DBA-Team-Service Down-MSSQL'
+    continue: true
+
+  - match:
+      severity: 'warning'
+      database: "MSSQL"	  
+    receiver: 'MSSQL-DATABASE-Error-DBA-Team'
+    continue: true
+
+  - match:
+      severity: "Critical 95%"
+      database: "MSSQL"
+    receiver: 'slack-DBA-Team-Critical-MSSQL'
+    continue: true
+
+  - match:
+      severity: "Warning 85%"
+      database: "MSSQL"
+    receiver: 'slack-DBA-Team-Warning-MSSQL'
+    continue: true
+
+  - match:
+      severity: "Critical 90%"
+      database: "MSSQL"
+    receiver: 'slack-DBA-Team-Disk-Critical-MSSQL'
+    continue: true
+
+  - match:
+      severity: "Warning 80%"
+      database: "MSSQL"
+    receiver: 'slack-DBA-Team-Disk-Warning-MSSQL'
+    continue: true	
+#.......................HRMS Email Conf......................
+  - match:
+      group: HRMS
+      severity: "Critical 50%"
+    receiver: 'email-HRMS-Critical'
+    continue: true
+  - match:
+      group: HRMS
+      severity: "Critical 90%"
+    receiver: 'email-HRMS-Critical'
+    continue: true
+  - match:
+      group: HRMS
+      severity: "Critical - Instance Down"
+    receiver: 'email-HRMS-InstanceDown'
+    continue: true
+#.......................Infra-Team-File Server Email Conf......................
+  - match:
+      group: "Infra-Team-File Server"
+      severity: "Critical 50%"
+    receiver: 'email-Infra-Team-File Server-Critical'
+    continue: true
+  - match:
+      group: "Infra-Team-File Server"
+      severity: "Critical 90%"
+    receiver: 'email-Infra-Team-File Server-Critical'
+    continue: true
+  - match:
+      group: "Infra-Team-File Server"
+      severity: "Critical - Instance Down"
+    receiver: 'email-Infra-Team-File Server-InstanceDown'
+    continue: true
+#.......................Infra-Team-Logger Email Conf......................
+  - match:
+      group: "Infra-Team-Logger"
+      severity: "Critical 50%"
+    receiver: 'email-Infra-Team-Logger-Critical'
+    continue: true
+  - match:
+      group: "Infra-Team-Logger"
+      severity: "Critical 90%"
+    receiver: 'email-Infra-Team-Logger-Critical'
+    continue: true
+  - match:
+      group: "Infra-Team-Logger"
+      severity: "Critical - Instance Down"
+    receiver: 'email-Infra-Team-Logger-InstanceDown'
+    continue: true
+#.......................Infra-Team Email Conf......................
+  - match:
+      group: "Infra-Team"
+      severity: "Critical 50%"
+    receiver: 'email-Infra-Team-Critical'
+    continue: true
+  - match:
+      group: "Infra-Team"
+      severity: "Critical 90%"
+    receiver: 'email-Infra-Team-Critical'
+    continue: true
+  - match:
+      group: "Infra-Team"
+      severity: "Critical - Instance Down"
+    receiver: 'email-Infra-Team-InstanceDown'
+    continue: true
+#.......................Customer-Engagement Email Conf......................
+  - match:
+      group: 'Customer-Engagement'
+      severity: "Critical 50%"
+    receiver: 'email-Customer-Engagement-Critical'
+    continue: true
+  - match:
+      group: 'Customer-Engagement'
+      severity: "Critical 90%"
+    receiver: 'email-Customer-Engagement-Critical'
+    continue: true
+  - match:
+      group: 'Customer-Engagement'
+      severity: "Critical - Instance Down"
+    receiver: 'email-Customer-Engagement-InstanceDown'
+    continue: true
+  - match:
+      group: Customer-Engagement
+    receiver: 'Customer-Engagement'
+    continue: true
+#.......................EKYC Email Conf......................
+  - match:
+      group: 'EKYC'
+      severity: "Critical 50%"
+    receiver: 'email-EKYC-Critical'
+    continue: true
+  - match:
+      group: 'EKYC'
+      severity: "Critical 90%"
+    receiver: 'email-EKYC-Critical'
+    continue: true
+  - match:
+      group: 'EKYC'
+      severity: "Critical - Instance Down"
+    receiver: 'email-EKYC-InstanceDown'
+    continue: true
+#......................LAMA Slack Conf....................................
+  - match:
+      group: LAMA
+    receiver: 'LAMA'
+    continue: true
+#......................DR-Trading-System Slack Conf................................
+  - match:
+      group: DR-Trading-Systems
+    receiver: 'DR-Trading-Systems'
+    continue: true
+#......................DR-Trading-LAMA Slack Conf................................
+  - match:
+      group: DR-Trading-LAMA-Systems
+    receiver: 'DR-Trading-LAMA-Systems'
+    continue: true
+#..........................................
+#  - match:
+#      group:
+#    receiver: 'alertsnitch'
+#    continue: true
+#........................................
+#  - match:
+#      group:
+#    receiver: 'Cintriniz_Alert'
+#    continue: true
+#..........................................
+  - match:
+      group: Middleware
+    receiver: Middleware   
+    continue: true
+#.................................................
+  - match:
+      group: Devops-team
+    receiver: devops-team
+    continue: true
+#...................................................
+  - match:
+      group: Broadcast
+    receiver: broadcast
+    continue: true
+#...................................................
+  - match:
+      group: SRE-team
+    receiver: sre-team
+    continue: true
+#...................................................................................   
+  - match:
+      group: Pre-Trade-Team
+    receiver: pre-trade-team
+    continue: true
+#................................................
+receivers:
+- name: 'email-slack-notifications'  
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    icon_emoji: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+    channel: '#alert-manager'
+    send_resolved: true
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#.........................LogtoFileSTX------------------------------
+- name: 'log-to-file-STX'
+  webhook_configs:
+  - url: 'http://localhost:9095/alert'
+#........................Infra-Team-VSNL Email.................................
+- name: 'email-Infra-Team-VSNL-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: anuragverma@smcindiaonline.com,ganeshbadhani@smcindiaonline.com,rajeshsahu@smcindiaonline.com,sumitk@smcindiaonline.com,ishwinder.singh@smcindiaonline.com,rohit@smcindiaonline.com,vivekmishra@smcindiaonline.com,kunalbhardwaj@stoxkart.com,uttam@smcindiaonline.com,amitg@smcindiaonline.com,komal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Infra-Team-VSNL-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: anuragverma@smcindiaonline.com,ganeshbadhani@smcindiaonline.com,rajeshsahu@smcindiaonline.com,sumitk@smcindiaonline.com,ishwinder.singh@smcindiaonline.com,rohit@smcindiaonline.com,vivekmishra@smcindiaonline.com,kunalbhardwaj@stoxkart.com,uttam@smcindiaonline.com,amitg@smcindiaonline.com,komal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa      
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................DR-Trading-LAMA-Systems Email.................................
+- name: 'email-DR-Trading-LAMA-Systems'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: anuragverma@smcindiaonline.com,gauravbadhani@smcindiaonline.com,satveersingh@smcindiaonline.com,ganeshbadhani@smcindiaonline.com,vivekmishra@smcindiaonline.com,kunalbhardwaj@stoxkart.com,rajeshsahu@smcindiaonline.com,sumitk@smcindiaonline.com,ishwinder.singh@smcindiaonline.com,rohit@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com   
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#------------------------------------------------------------------------------
+- name: 'DR-Trading-LAMA-Systems'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dr-lama-server'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+#......................Jira Tickets.............................................
+- name: 'jira-email_InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'jira-email_90%'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summmary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'jira-email_95%'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summmary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'jira-email_60%'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summmary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'jira-email_65%'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summmary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'jira-email_75%'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summmary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+
+- name: 'jira-email_critical service down'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'jira-email_critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'jira-email_warning'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'jira-email_info'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................SRE Email.................................
+- name: 'email-sre-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-sre-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'jira-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: support@smcglobalsecurities.atlassian.net
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: false
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summmary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}      
+#........................IDG Team Email.................................
+- name: 'email-IDG-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: saifahmad@smcindiaonline.com,kunalsharma@smcindiaonline.com,digvijaybahree@smcindiaonline.com,nripendra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-IDG-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: saifahmad@smcindiaonline.com,kunalsharma@smcindiaonline.com,digvijaybahree@smcindiaonline.com,nripendra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................IDG Team Slack Conf.................................
+- name: 'IDG'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#idg-team-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................EKYC Team Email.................................
+- name: 'email-EKYC-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,deepak1983@smcindiaonline.com,abhishekmore@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-EKYC-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,deepak1983@smcindiaonline.com,abhishekmore@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................BusinessDashboard Team Email.................................
+- name: 'email-BusinessDashboard-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: sonalimahadik@smcindiaonline.com,vsachdeva@smcindiaonline.com,deepak1983@smcindiaonline.com,harkamaldev@smcindiaonline.com,karanjit@smcindiaonline.com,vsachdeva@smcindiaonline.com,itshubham@smcindiaonline.com,arvind.semwal@smcindiaonline.com,pulkitagupta@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-BusinessDashboard-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: sonalimahadik@smcindiaonline.com,vsachdeva@smcindiaonline.com,deepak1983@smcindiaonline.com,harkamaldev@smcindiaonline.com,karanjit@smcindiaonline.com,vsachdeva@smcindiaonline.com,itshubham@smcindiaonline.com,arvind.semwal@smcindiaonline.com,pulkitagupta@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................BusinessDashboard Team Slack Conf.................................
+- name: 'BusinessDashboard'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#business-dashboard-uat-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................BusinessDashboard-Prod Team Email.................................
+- name: 'email-BusinessDashboard-Prod-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: sonalimahadik@smcindiaonline.com,vsachdeva@smcindiaonline.com,deepak1983@smcindiaonline.com,harkamaldev@smcindiaonline.com,karanjit@smcindiaonline.com,vsachdeva@smcindiaonline.com,itshubham@smcindiaonline.com,deepak1983@smcindiaonline.com,arvind.semwal@smcindiaonline.com,pulkitagupta@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-BusinessDashboard-Prod-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: sonalimahadik@smcindiaonline.com,vsachdeva@smcindiaonline.com,deepak1983@smcindiaonline.com,harkamaldev@smcindiaonline.com,karanjit@smcindiaonline.com,vsachdeva@smcindiaonline.com,itshubham@smcindiaonline.com,deepak1983@smcindiaonline.com,arvind.semwal@smcindiaonline.com,pulkitagupta@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................BusinessDashboard-Prod Team Slack Conf.................................
+- name: 'BusinessDashboard-Prod'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#buisness-dashboard-prod'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#.......................Research-Guest-login For Kevin..........................
+- name: 'email-Research-Guest-login-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: kevinfernandes@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Research-Guest-login-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: kevinfernandes@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#.......................Marketing-Tech-Subscription Server..........................
+- name: 'email-Marketing-Tech-Subscription-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: rajkishorekandle@smcindiaonline.com,vaibhavrajput@smcindiaonline.com,jahanavi@smcindiaonline.com,sushilpradhan@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Marketing-Tech-Subscription-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: rajkishorekandle@smcindiaonline.com,vaibhavrajput@smcindiaonline.com,jahanavi@smcindiaonline.com,sushilpradhan@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}      
+#.......................Talisma Server For Rajkishore..........................
+- name: 'email-TalismaServer-Rajkishore-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: rajkishorekandle@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-TalismaServer-Rajkishore-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: rajkishorekandle@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Pre Trade Team Email.................................
+- name: 'email-Pre-Trade-Team-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: alertspretrading@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+ 
+- name: 'email-Pre-Trade-Team-Uptime'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: alertspretrading@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}  
+
+- name: 'email-Pre-Trade-Team-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: alertspretrading@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Pre-Trade-Team-Port-Down'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: alertspretrading@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Pre Trade Team Slack Conf.................................
+- name: 'pre-trade-team'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#pre-trade-team'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................Payment Getter Service Email.................................
+- name: 'email-Payment Getter Service-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: deepak1983@smcindiaonline.com,rishavagarwal@smcindiaonline.com,yogendrakalal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Payment Getter Service-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: deepak1983@smcindiaonline.com,rishavagarwal@smcindiaonline.com,yogendrakalal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................DBA Oracle and MSSQL Email.................................
+- name: 'email-DBA-Team-InstanceDown-ORACLE'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-InstanceDown-MSSQL'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true	
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Service Down-ORACLE'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Service Down-MSSQL'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true	
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Critical-ORACLE'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true		
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Critical-MSSQL'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true		
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Warning-ORACLE'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true	
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Disk-Critical-ORACLE'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Disk-Critical-MSSQL'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Disk-Warning-MSSQL'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Disk-Warning-ORACLE'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-DBA-Team-Warning-MSSQL'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: prakashverma@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,SMCDBATeam@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#................................Oracle Slack Config........................................
+- name: 'slack-DBA-Team-Warning-ORACLE'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-sql-warning-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}    
+
+- name: 'slack-DBA-Team-Disk-Warning-ORACLE'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-sql-warning-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+
+- name: 'slack-DBA-Team-Critical-ORACLE'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-oracle-critical-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+
+- name: 'slack-DBA-Team-Disk-Critical-ORACLE'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-oracle-critical-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+
+- name: 'slack-DBA-Team-InstanceDown-ORACLE'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-oracle-critical-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+
+- name: 'slack-DBA-Team-Service Down-ORACLE'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-oracle-critical-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+
+#.....................................MSSQL Slack Config......................................
+- name: 'slack-DBA-Team-Warning-MSSQL'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-sql-warning-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+
+- name: 'slack-DBA-Team-Disk-Warning-MSSQL'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-sql-warning-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+
+- name: 'slack-DBA-Team-Critical-MSSQL'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-sql-critical-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+
+- name: 'slack-DBA-Team-Disk-Critical-MSSQL'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-sql-critical-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+########################################################3done till here ########################
+- name: 'slack-DBA-Team-InstanceDown-MSSQL'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-sql-critical-alerts'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+
+- name: 'slack-DBA-Team-Service Down-MSSQL'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-sql-critical-alerts'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+
+- name: 'MSSQL-DATABASE-Error-DBA-Team'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dba-sql-warning-alerts'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+#.......................Notification-center Email.................................
+- name: 'email-Notification-center-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: mohzin@smcindiaonline.com,deepeshpathak@smcindiaonline.com,swapniljha@smcindiaonline.com,aquibshaikh@smcindiaonline.com,mohammedshaik@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Notification-center-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: mohzin@smcindiaonline.com,deepeshpathak@smcindiaonline.com,swapniljha@smcindiaonline.com,aquibshaikh@smcindiaonline.com,mohammedshaik@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Partner-Portal Email.................................
+- name: 'email-Partner-Portal-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: sonalimahadik@smcindiaonline.com,vsachdeva@smcindiaonline.com,deepak1983@smcindiaonline.com,harkamaldev@smcindiaonline.com,karanjit@smcindiaonline.com,pulkitagupta@smcindiaonline.com,arvind.semwal@smcindiaonline.com,itshubham@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Partner-Portal-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: sonalimahadik@smcindiaonline.com,vsachdeva@smcindiaonline.com,deepak1983@smcindiaonline.com,harkamaldev@smcindiaonline.com,karanjit@smcindiaonline.com,pulkitagupta@smcindiaonline.com,arvind.semwal@smcindiaonline.com,itshubham@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Marketing-Tech Email.................................
+- name: 'email-Marketing-Tech-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: karanjit@smcindiaonline.com,dhananjay@marketsmojo.com,kevin@marketsmojo.com,digvijaybahree@smcindiaonline.com,mohzin@smcindiaonline.com,pulkitagupta@smcindiaonline.com,rajkishorekandle@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Marketing-Tech-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: karanjit@smcindiaonline.com,digvijaybahree@smcindiaonline.com,mohzin@smcindiaonline.com,pulkitagupta@smcindiaonline.com,rajkishorekandle@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................CRM Email.................................
+- name: 'email-Talisma_CRM-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: pritamanand@smcindiaonline.com,sushilpradhan@smcindiaonline.com,rajkishorekandle@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Talisma_CRM-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: pritamanand@smcindiaonline.com,sushilpradhan@smcindiaonline.com,rajkishorekandle@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com 
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................UAT-Middleware-Testing Email.................................
+- name: 'email-UAT-Middleware-Testing-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: amarjeetkumar@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-UAT-Middleware-Testing-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: amarjeetkumar@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Aniket DB Alerts for Class Database Email.................................
+- name: 'Aniket DB Alerts for Class Database'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: digvijaybahree@smcindiaonline.com,vaibhavrajput@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com    
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................SunAccApp_Server Email.................................
+- name: 'email-SunAccApp_Server-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: chandreshbhugari@smcindiaonline.com,vinodjamar@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-SunAccApp_Server-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: chandreshbhugari@smcindiaonline.com,vinodjamar@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................SMC-Mail-Server Email.................................
+- name: 'email-Mail-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: vikram@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com 
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Mail-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: vikram@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com    
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................SMC-Talisma-Mail-Server Email.................................
+- name: 'email-SMC-Talisma-Mail-Server-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: vikram@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com 
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-SMC-Talisma-Mail-Server-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: vikram@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com    
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Backoffice Email.................................
+- name: 'email-Backoffice-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: shalesh_kumar@smcindiaonline.com,vinayb@smcindiaonline.com,panwar@smcindiaonline.com,prakashverma@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,techissuesbo@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Backoffice-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: shalesh_kumar@smcindiaonline.com,vinayb@smcindiaonline.com,panwar@smcindiaonline.com,prakashverma@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,techissuesbo@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................NBFC Email.................................
+- name: 'email-NBFC-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: rohit@smcindiaonline.com,komal@smcindiaonline.com,amitg@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-NBFC-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: rohit@smcindiaonline.com,komal@smcindiaonline.com,amitg@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Optimum Email.................................
+- name: 'email-Optimum-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: mohzin@smcindiaonline.com,deepeshpathak@smcindiaonline.com,swapniljha@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,komal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Optimum-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: mohzin@smcindiaonline.com,deepeshpathak@smcindiaonline.com,swapniljha@smcindiaonline.com,rohit@smcindiaonline.com,uttam@smcindiaonline.com,komal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Research team Email.................................
+- name: 'email-Research team-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: suresh5860@smcindiaonline.com,uttam@smcindiaonline.com,komal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Research team-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: suresh5860@smcindiaonline.com,uttam@smcindiaonline.com,komal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Subscription Email.................................
+- name: 'email-Subscription-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: ankitkumar1990@smcindiaonline.com,mohzin@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Subscription-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: ankitkumar1990@smcindiaonline.com,mohzin@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Product-team Email.................................
+- name: 'email-Product-team'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: satveersingh@smcindiaonline.com,anuragverma@smcindiaonline.com,gauravbadhani@smcindiaonline.com,rajeshsahu@smcindiaonline.com,sumitk@smcindiaonline.com,ishwinder.singh@smcindiaonline.com,rohit@smcindiaonline.com,vivekmishra@smcindiaonline.com,kunalbhardwaj@stoxkart.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+#- name: 'email-Product-team-Critical'
+#  email_configs:
+#  - smarthost: 172.16.0.91:25025
+#    from: sre-alerts@stoxkart.co.in
+#    to: anuragverma@smcindiaonline.com,gauravbadhani@smcindiaonline.com,rajeshsahu@smcindiaonline.com,sumitk@smcindiaonline.com,ishwinder.singh@smcindiaonline.com,rohit@smcindiaonline.com,vivekmishra@smcindiaonline.com,kunalbhardwaj@stoxkart.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+#    auth_username: sre-alerts
+#    auth_identity: sre-alerts
+#    auth_password: aGG3*T4#j4esa
+#    send_resolved: true
+#    require_tls: false
+#    headers:
+#      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+#    text: |
+#      {{ range .Alerts }}
+#      Alert: {{ .Annotations.summary }}
+#      Description: {{ .Annotations.description }}
+#      Severity: {{ .Labels.severity }}
+#      Status: {{ .Status }}
+#      {{ end }}
+
+#- name: 'email-Product-team-InstanceDown'
+#  email_configs:
+#  - smarthost: 172.16.0.91:25025
+#    from: sre-alerts@stoxkart.co.in
+#    to: anuragverma@smcindiaonline.com,gauravbadhani@smcindiaonline.com,rajeshsahu@smcindiaonline.com,sumitk@smcindiaonline.com,ishwinder.singh@smcindiaonline.com,rohit@smcindiaonline.com,vivekmishra@smcindiaonline.com,kunalbhardwaj@stoxkart.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+#    auth_username: sre-alerts
+#    auth_identity: sre-alerts
+#    auth_password: aGG3*T4#j4esa
+#    send_resolved: true
+#    require_tls: false
+#    headers:
+#      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+#    text: |
+#      {{ range .Alerts }}
+#      Alert: {{ .Annotations.summary }}
+#      Description: {{ .Annotations.description }}
+#      Severity: {{ .Labels.severity }}
+#      Status: {{ .Status }}
+#      {{ end }}
+#........................LAMA Email.................................
+- name: 'email-LAMA'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: satveersingh@smcindiaonline.com,sumitk@smcindiaonline.com,vivekmishra@smcindiaonline.com,kunalbhardwaj@stoxkart.com,rajeshsahu@smcindiaonline.com,anuragverma@smcindiaonline.com,gauravbadhani@smcindiaonline.com,ishwinder.singh@smcindiaonline.com,rohit@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,ganeshbadhani@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................DR-Trading-Systems Email.................................
+- name: 'email-DR-Trading-Systems'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: anuragverma@smcindiaonline.com,gauravbadhani@smcindiaonline.com,satveersingh@smcindiaonline.com,ganeshbadhani@smcindiaonline.com,vivekmishra@smcindiaonline.com,kunalbhardwaj@stoxkart.com,rajeshsahu@smcindiaonline.com,sumitk@smcindiaonline.com,ishwinder.singh@smcindiaonline.com,rohit@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com   
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Infra-Team-Cezentrix Email.................................
+- name: 'email-Infra-Team-Cezentrix-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: chandanyadav@smcindiaonline.com,komal@smcindiaonline.com,uttam@smcindiaonline.com,rohit@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Infra-Team-Cezentrix-Critical-Disk75'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: chandanyadav@smcindiaonline.com,komal@smcindiaonline.com,uttam@smcindiaonline.com,rohit@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Infra-Team-Cezentrix-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: chandanyadav@smcindiaonline.com,komal@smcindiaonline.com,uttam@smcindiaonline.com,rohit@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Infra-Team-Antivirus KIT Email.................................
+- name: 'email-Infra-Team-Antivirus KIT-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: ankur@smcindiaonline.com,komal@smcindiaonline.com,uttam@smcindiaonline.com,rohit@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Infra-Team-Antivirus KIT-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: ankur@smcindiaonline.com,komal@smcindiaonline.com,uttam@smcindiaonline.com,rohit@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................HRMS Email Conf.................................
+- name: 'email-HRMS-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: akhanna@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-HRMS-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: akhanna@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Infra-Team-Logger Email Conf.................................
+- name: 'email-Infra-Team-Logger-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: ankur@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Infra-Team-Logger-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: ankur@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Infra-Team Email Conf.................................
+- name: 'email-Infra-Team-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: uttam@smcindiaonline.com,amitg@smcindiaonline.com,komal@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Infra-Team-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: uttam@smcindiaonline.com,amitg@smcindiaonline.com,komal@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Infra-Team-File Server Email Conf.................................
+- name: 'email-Infra-Team-File Server-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: anuragverma@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,amitg@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Infra-Team-File Server-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: anuragverma@smcindiaonline.com,kunalbhardwaj@stoxkart.com,vivekmishra@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,amitg@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#--------------------bandwidth-monitoring------------------------------------------------------
+- name: 'bandwidth-monitoring-slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#network-bandwidth-alerts'
+    send_resolved: true
+    title: '{{ if eq .Status "firing" }}[{{ .CommonLabels.severity | toUpper }}] Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |-
+      *Alert:* {{ .CommonLabels.alertname }}
+      *Severity:* {{ .CommonLabels.severity }}
+      *Instance:* {{ .CommonLabels.instance }}
+      *Interface:* {{ .CommonAnnotations.interface }}
+      *Traffic(Mbps):* {{ .CommonAnnotations.traffic_mbps }}
+      *Direction:* {{ .CommonLabels.direction }}
+      *Summary:* {{ .CommonAnnotations.summary }}
+      *Description:* {{ .CommonAnnotations.description }}
+    http_config:
+      tls_config:
+       insecure_skip_verify: true
+
+- name: 'email-bandwidth-monitoring'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: 'sre-alerts@smctradeonline.co.in'
+    to: 'rohit@smcindiaonline.com,komal@smcindiaonline.com,achalkapoor@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,tusharshedge@smcindiaonline.com'
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}      
+#........................HR Email.................................
+- name: 'email-HR-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: shalesh_kumar@smcindiaonline.com,akhanna@smcindiaonline.com,panwar@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com    
+    auth_username: sre-alerts
+    auth_identity: sre-alerts   
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-HR-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: shalesh_kumar@smcindiaonline.com,akhanna@smcindiaonline.com,panwar@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Compliance Team Email.................................
+- name: 'email-Compliance Team-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: satish5842@smcindiaonline.com,helpdesk@tssconsultancy.com,support@tssconsultancy.com,Uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com    
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Compliance Team-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: satish5842@smcindiaonline.com,helpdesk@tssconsultancy.com,support@tssconsultancy.com,Uttam@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Branding-Team Email.................................
+- name: 'email-Branding-Team-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: premkr@smcindiaonline.com,komal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Branding-Team-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: premkr@smcindiaonline.com,komal@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+#........................Margin-Arbitrage-HFT Email.................................
+- name: 'email-Margin-Arbitrage-HFT-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in    
+    to: akhilrawat@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts   
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:      
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Margin-Arbitrage-HFT-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: akhilrawat@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}      
+      #........................Middleware Email.................................
+- name: 'email-Middleware-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: stxkrtmw@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Middleware-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: stxkrtmw@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Broadcast Email Conf.................................
+- name: 'email-Broadcast-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: bandariabhilash@smcindiaonline.com,abhishekmore@smcindiaonline.com,digvijaybahree@smcindiaonline.com,rajgupta@smcindiaonline.com,sonalimahadik@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Broadcast-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: bandariabhilash@smcindiaonline.com,abhishekmore@smcindiaonline.com,digvijaybahree@smcindiaonline.com,rajgupta@smcindiaonline.com,sonalimahadik@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Customer-Engagement Email.................................
+- name: 'email-Customer-Engagement-Critical'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: digvijaybahree@smcindiaonline.com,vaibhavrajput@smcindiaonline.com,aniketwaliyan@smcindiaonline.com,deepak1983@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+
+- name: 'email-Customer-Engagement-InstanceDown'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@stoxkart.co.in
+    to: digvijaybahree@smcindiaonline.com,vaibhavrajput@smcindiaonline.com,aniketwaliyan@smcindiaonline.com,deepak1983@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: true
+    tls_config:
+      insecure_skip_verify: true
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Customer-Engagement Slack.................................
+- name: 'Customer-Engagement'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#customer-engagement-and-retention'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+#.........................LAMA_Team Slack......................................................................
+- name: 'LAMA'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#lama-alerts'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+#.........................DR-Trading-Systems_Team Slack......................................................................
+- name: 'DR-Trading-Systems'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#dr-trading-server-alerts'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+#..........................alertsnitch.....................................................
+#- name: 'alertsnitch'
+#  webhook_configs:
+#  - url: 'http://10.10.0.207:9567/webhook'
+#    send_resolved: true
+#.........................................................................................
+#- name: 'Cintriniz_Alert'
+#  webhook_configs:
+#  - url: 'https://czenivr.smcindiaonline.org/apps/addlead.php?camp_name=MONITORING&mobile=9702680502'
+#    send_resolved: true
+#..............................................................................................
+- name: 'devops-team'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#devops-team'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+#............................................................................................................................
+- name: 'Middleware'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#live-middleware-servers'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+
+- name: 'Middleware-logs'
+  slack_configs:
+  - api_url: 'https://smcglobalsecu-naz6656.slack.com/archives/C07NTCP54LA/p1744088352700819'
+    channel: '#middleware-backend-logs-alerts'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+#..............................................................................................................................................................
+- name: 'sre-team'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#sre-alerts'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+#..............................................................................................................................................................
+- name: 'broadcast'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#broadcast-team'
+    send_resolved: true
+    icon_url: https://avatars3.githubusercontent.com/u/3380462
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: >
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+         {{ end }}
+       {{ end }}
+#........................vinayb_api API and Port alerts.................................
+- name: 'email-vinayb_api-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,vinayb@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................vinayb_api API and Port alerts Slack Conf.................................
+- name: 'vinayb_api api and port slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#vinayb_api'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *🔥 Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *ℹ️Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................Pre-Trade-Team API and Port alerts.................................
+- name: 'email-Pre-Trade-Team-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,alertspretrading@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Pre-Trade-Team API and Port alerts Slack Conf.................................
+- name: 'Pre-Trade-Team api and port slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#pre-trade-team'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................live-middleware-servers API and Port alerts.................................
+- name: 'email-live-middleware-servers-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,stxkrtmw@smcindiaonline.com,
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................live-middleware-servers API and Port alerts Slack Conf.................................
+- name: 'live-middleware-servers api and port slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#live-middleware-servers'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................ekyc-2-apis API and Port alerts.................................
+- name: 'email-ekyc-2-apis-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: kishorejaitapkar@smcindiaonline.com,tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,prakashverma@smcindiaonline.com,mohzin@smcindiaonline.com,anuragtomar@stoxkart.com,himanshuverma@smcindiaonline.com,shyamreddy@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................ekyc-2-apis API and Port alerts Slack Conf.................................
+- name: 'ekyc-2-apis api and port slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#ekyc-2-apis'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................devops-team API and Port alerts.................................
+- name: 'email-devops-team-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................devops-team API and Port alerts Slack Conf.................................
+- name: 'devops-team api and port slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#devops-team'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................customer-engagement-and-retention API and Port alerts.................................
+- name: 'email-customer-engagement-and-retention-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,alertspretrading@smcindiaonline.com,digvijaybahree@smcindiaonline.com,aniketwaliyan@smcindiaonline.com,vaibhavrajput@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................customer-engagement-and-retention API and Port alerts Slack Conf.................................
+- name: 'customer-engagement-and-retention api and port slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#customer-engagement-and-retention'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................BuisnessDashboard API and Port alerts.................................
+- name: 'email-BuisnessDashboard-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,pp_tech@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................BuisnessDashboard API and Port alerts Slack Conf.................................
+- name: 'BuisnessDashboard api and port slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#business-dashboard-uat-alerts'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................Business Dashboard Prod API and Port alerts.................................
+- name: 'email-Business Dashboard Prod-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: deepak1983@smcindiaonline.com, pulkitagupta@smcindiaonline.com, itshubham@smcindiaonline.com, anandshukla@smcindiaonline.com, arvind.semwal@smcindiaonline.com, chiragkapasi@smcindiaonline.com, tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................Business Dashboard Prod API and Port alerts Slack Conf.................................
+- name: 'Business Dashboard Prod api and port slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#buisness-dashboard-prod'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}
+#........................bo-data-monitoring API and Port alerts.................................
+- name: 'email-bo-data-monitoring-critical-api-port'
+  email_configs:
+  - smarthost: 172.16.0.91:25025
+    from: sre-alerts@smctradeonline.co.in
+    to: tusharshedge@smcindiaonline.com,kishorejaitapkar@smcindiaonline.com,yahiya@smcindiaonline.com
+    auth_username: sre-alerts
+    auth_identity: sre-alerts@smctradeonline.co.in
+    auth_password: aGG3*T4#j4esa
+    send_resolved: true
+    require_tls: false
+    headers:
+      subject: '{{ if eq .Status "firing" }}Attention Required: {{ .CommonAnnotations.summary }}{{ else }}Resolved: {{ .CommonAnnotations.summary }}{{ end }}'
+    text: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Status: {{ .Status }}
+      {{ end }}
+#........................bo-data-monitoring API and Port alerts Slack Conf.................................
+- name: 'bo-data-monitoring api and port slack'
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/REDACTED'
+    channel: '#bo-data-monitoring'
+    send_resolved: true
+    icon_emoji: '<:alertcircle:>'
+    title: '{{ if eq .Status "firing" }}Attention Required{{ else }}Resolved{{ end }}: {{ .CommonAnnotations.summary }}'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details:*
+      {{ range .Labels.SortedPairs }}
+      • *{{ .Name }}:* `{{ .Value }}`
+      {{ end }}
+      {{ end }}     
